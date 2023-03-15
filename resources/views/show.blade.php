@@ -30,11 +30,11 @@
                 </div>
             </div>
             <div class="row mb-4">
-                <label class="col-sm-2 col-label-form"><b>Teacher assigned</b></label>
+                <label class="col-sm-2 col-label-form"><b>Categoria</b></label>
                 <div class="col-sm-10">
-                    @foreach ($profesores as $profesor)
-                        @if ($profesor->id == $student->id_profesor)
-                            {{ $profesor->profesor_name }}
+                    @foreach ($categorias as $categoria)
+                        @if ($categoria->id == $student->id_categoria)
+                            {{ $categoria->descripcion }}
                         @endif
                     @endforeach
                 </div>

@@ -30,11 +30,11 @@
 				</div>
 			</div>
 			<div class="row mb-4">
-				<label class="col-sm-2 col-label-form">Teacher assigned</label>
+				<label class="col-sm-2 col-label-form">Categoria</label>
 				<div class="col-sm-10">
-					<select name="id_profesor" class="form-control">
-						@foreach ($profesores as $profesor)
-							<option value="{{$profesor->id}}">{{$profesor->profesor_name}}</option>
+					<select name="id_categoria" class="form-control">
+						@foreach ($categorias as $categoria)
+							<option value="{{$categoria->id}}">{{$categoria->descripcion}}</option>
 						@endforeach
 					</select>
 				</div>
@@ -57,6 +57,7 @@
 </div>
 <script>
 document.getElementsByName('student_gender')[0].value = "{{ $student->student_gender }}";
+document.getElementsByName('id_categoria')[0].value = "{{ $student->id_categoria }}";
 </script>
 
 @endsection('content')

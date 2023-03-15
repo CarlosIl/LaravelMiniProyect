@@ -24,7 +24,7 @@
                     <th>Name</th>
                     <th>Email</th>
                     <th>Gender</th>
-                    <th>Teacher</th>
+                    <th>Categoria</th>
                     <th>Action</th>
                 </tr>
                 @if (count($data) > 0)
@@ -35,9 +35,9 @@
                             <td>{{ $row->student_email }}</td>
                             <td>{{ $row->student_gender }}</td>
 
-                            @foreach ($profesores as $profesor)
-								@if ($profesor->id == $row->id_profesor)
-									<td>{{ $profesor->profesor_name }}</td>
+                            @foreach ($categorias as $categoria)
+								@if ($categoria->id == $row->id_categoria)
+									<td>{{ $categoria->descripcion }}</td>
 								@endif
                             @endforeach
                             

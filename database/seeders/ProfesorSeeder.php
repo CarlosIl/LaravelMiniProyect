@@ -16,23 +16,23 @@ class ProfesorSeeder extends Seeder
      */
     public function run(): void
     {
-        $data = [
-            [
-                'profesor_name' => 'Juan Alonso',
-                'profesor_email' => 'juan@profesor.com',
-                'profesor_tel' => '983123456',
-            ],
-            [
-                'profesor_name' => 'Jose Antonio',
-                'profesor_email' => 'jose@profesor.com',
-                'profesor_tel' => '983123654',
-            ],
-            [
-                'profesor_name' => 'Ana Rosa',
-                'profesor_email' => 'ana@profesor.com',
-                'profesor_tel' => '983765543',
-            ],
-        ];
-        Profesor::insert($data);
+        // $data = [
+        //     [
+        //         'profesor_name' => 'Juan Alonso',
+        //         'profesor_email' => 'juan@profesor.com',
+        //         'profesor_tel' => '983123456',
+        //     ],
+        //     [
+        //         'profesor_name' => 'Jose Antonio',
+        //         'profesor_email' => 'jose@profesor.com',
+        //         'profesor_tel' => '983123654',
+        //     ],
+        //     [
+        //         'profesor_name' => 'Ana Rosa',
+        //         'profesor_email' => 'ana@profesor.com',
+        //         'profesor_tel' => '983765543',
+        //     ],
+        // ];
+        // Profesor::insert($data);
     }
 }
