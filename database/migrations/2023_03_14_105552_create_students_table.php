@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('student_email');
             $table->enum('student_gender', ['Male', 'Female']);
             $table->string('student_image');
+            $table->foreignId("id_profesor")->on("profesors");
             $table->timestamps();
         });
     }

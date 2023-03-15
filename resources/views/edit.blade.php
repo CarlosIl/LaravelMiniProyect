@@ -30,6 +30,16 @@
 				</div>
 			</div>
 			<div class="row mb-4">
+				<label class="col-sm-2 col-label-form">Teacher assigned</label>
+				<div class="col-sm-10">
+					<select name="id_profesor" class="form-control">
+						@foreach ($profesores as $profesor)
+							<option value="{{$profesor->id}}">{{$profesor->profesor_name}}</option>
+						@endforeach
+					</select>
+				</div>
+			</div>
+			<div class="row mb-4">
 				<label class="col-sm-2 col-label-form">Student Image</label>
 				<div class="col-sm-10">
 					<input type="file" name="student_image" />

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
+use App\Models\Profesor;
 use Illuminate\Http\Request;
 
 class StudentController extends Controller
@@ -15,8 +16,9 @@ class StudentController extends Controller
     public function index()
     {
         $data = Student::latest()->paginate(5);
+        $profesores = Profesor::all();
 
-        return view('index', compact('data'))->with('i', (request()->input('page', 1) - 1) * 5);
+        return view('index', compact('data','profesores'))->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
     /**
@@ -26,7 +28,9 @@ class StudentController extends Controller
      */
     public function create()
     {
-        return view('create');
+        $profesores = Profesor::all();
+        
+        return view('create', compact('profesores'));
     }
 
     /**
@@ -52,6 +56,7 @@ class StudentController extends Controller
         $student->student_name = $request->student_name;
         $student->student_email = $request->student_email;
         $student->student_gender = $request->student_gender;
+        $student->id_profesor = $request->id_profesor;
         $student->student_image = $file_name;
 
         $student->save();
@@ -67,7 +72,8 @@ class StudentController extends Controller
      */
     public function show(Student $student)
     {
-        return view('show', compact('student'));
+        $profesores = Profesor::all();
+        return view('show', compact('student','profesores'));
     }
 
     /**
@@ -78,7 +84,8 @@ class StudentController extends Controller
      */
     public function edit(Student $student)
     {
-        return view('edit', compact('student'));
+        $profesores = Profesor::all();
+        return view('edit', compact('student','profesores'));
     }
 
     /**
@@ -112,6 +119,8 @@ class StudentController extends Controller
         $student->student_email = $request->student_email;
 
         $student->student_gender = $request->student_gender;
+
+        $student->id_profesor = $request->id_profesor;
 
         $student->student_image = $student_image;
 
