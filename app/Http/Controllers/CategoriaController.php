@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Categoria;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\DB;
+
 class CategoriaController extends Controller
 {
     /**
@@ -82,8 +84,16 @@ class CategoriaController extends Controller
     //  */
     public function destroy(Categoria $categoria)
     {
-        $categoria->delete();
+        $sql = DB::select('SELECT count(*) as total FROM students WHERE id_categoria = ?',[$categoria->id]);
+        $students_with_categoria = intval($sql[0]->total);
+        
+        if ($students_with_categoria == 0) {
+            $categoria->delete();
 
-        return redirect()->route('categorias.index')->with('success', 'La categoría ha sido eliminada');
+            return redirect()->route('categorias.index')->with('success', 'La categoría ha sido eliminada');
+        }else{
+
+            return redirect()->route('categorias.index')->with('error', "ERROR: La categoria esta siendo usada $students_with_categoria veces");
+        }
     }
 }

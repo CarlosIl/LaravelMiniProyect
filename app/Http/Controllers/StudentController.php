@@ -18,7 +18,7 @@ class StudentController extends Controller
         $data = Student::latest()->paginate(5);
         $categorias = Categoria::all();
 
-        return view('index', compact('data','categorias'))->with('i', (request()->input('page', 1) - 1) * 5);
+        return view('student/index', compact('data','categorias'))->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
     /**
@@ -30,7 +30,7 @@ class StudentController extends Controller
     {
         $categorias = Categoria::all();
         
-        return view('create', compact('categorias'));
+        return view('student/create', compact('categorias'));
     }
 
     /**
@@ -73,7 +73,7 @@ class StudentController extends Controller
     public function show(Student $student)
     {
         $categorias = Categoria::all();
-        return view('show', compact('student','categorias'));
+        return view('student/show', compact('student','categorias'));
     }
 
     /**
@@ -85,7 +85,7 @@ class StudentController extends Controller
     public function edit(Student $student)
     {
         $categorias = Categoria::all();
-        return view('edit', compact('student','categorias'));
+        return view('student/edit', compact('student','categorias'));
     }
 
     /**
