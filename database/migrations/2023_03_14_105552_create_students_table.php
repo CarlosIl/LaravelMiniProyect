@@ -4,8 +4,6 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-use Illuminate\Support\Facades\DB;
-
 return new class extends Migration
 {
     /**
@@ -23,16 +21,9 @@ return new class extends Migration
             $table->unsignedBigInteger('id_categoria');
             $table->foreign("id_categoria")->references('id')->on('categorias')->onDelete('cascade')->onUpdate('cascade');
             $table->string('student_image');
-            // $table->foreignId("id_profesor")->on("profesors");
             $table->timestamps();
         });
 
-
-        // DB::statement('alter table students add constraint students_id_categoria_foreign
-        //                foreign key (id_categoria)
-        //                references categoria(id)
-        //                on delete cascade;'
-        // );
     }
 
     /**
@@ -40,7 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // DB::statement('alter table students drop FOREIGN KEY students_id_categoria_foreign;');
         Schema::dropIfExists('students');
     }
 };

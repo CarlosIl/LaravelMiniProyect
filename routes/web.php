@@ -16,13 +16,15 @@ use App\Models\Categoria;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+Route::resource('/', StudentController::class);
 
 Route::resource('students', StudentController::class);
 
-Route::get('index', [StudentController::class,'index']) ->name('home');
+// Route::get('index', [StudentController::class,'index']) ->name('home');
 
 // Route::get('categoria', [CategoriaController::class,'index']) ->name('categoria');
 
