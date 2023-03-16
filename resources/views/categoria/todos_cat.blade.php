@@ -48,7 +48,6 @@
                     </tr>
                 @endif
             </table>
-            {!! $data->links() !!}
         </div>
     </div>
 

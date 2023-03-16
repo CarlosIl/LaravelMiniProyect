@@ -12,9 +12,9 @@ class CategoriaController extends Controller
      */
     public function index()
     {
-        $data = Categoria::latest()->orderBy('id', 'ASC')->paginate(5);
+        $data = Categoria::all();
 
-        return view('categoria/todos_cat', compact('data'))->with('i', (request()->input('page', 1) - 1) * 5);
+        return view('categoria/todos_cat', compact('data'));
     }
 
     /**
@@ -31,7 +31,7 @@ class CategoriaController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'descripcion'          =>  'required',
+            'descripcion'          =>  'required|unique:categorias',
         ]);
 
         $categoria = new Categoria();
@@ -65,7 +65,7 @@ class CategoriaController extends Controller
     public function update(Request $request, Categoria $categoria)
     {
         $request->validate([
-            'descripcion'          =>  'required',
+            'descripcion'          =>  'required|unique:categorias',
         ]);
 
         $categoria = Categoria::find($request->hidden_id);

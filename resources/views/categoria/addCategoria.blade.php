@@ -19,7 +19,7 @@
 <div class="card">
 	<div class="card-header">Añadir Categoría</div>
 	<div class="card-body">
-		<form method="post" action="{{ route('categorias.store') }}" enctype="multipart/form-data">
+		<form method="post" action="{{ route('categorias.store') }}">
 			@csrf
 			<div class="row mb-3">
 				<label class="col-sm-2 col-label-form">Descripción</label>

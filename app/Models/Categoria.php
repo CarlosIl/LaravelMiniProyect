@@ -10,4 +10,5 @@ class Categoria extends Model
     use HasFactory;
 
     protected $fillable = ['descripcion'];
+    public $timestamps = false;
 }
