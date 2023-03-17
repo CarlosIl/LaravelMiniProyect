@@ -20,7 +20,7 @@ return new class extends Migration
             // $table->foreignId("id_categoria")->on("categorias");
             $table->unsignedBigInteger('id_categoria');
             $table->foreign("id_categoria")->references('id')->on('categorias')->onDelete('cascade')->onUpdate('cascade');
-            $table->string('student_image');
+            // $table->string('student_image');
             $table->timestamps();
         });
 

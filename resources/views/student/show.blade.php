@@ -39,12 +39,12 @@
                     @endforeach
                 </div>
             </div>
-            <div class="row mb-4">
+            {{-- <div class="row mb-4">
                 <label class="col-sm-2 col-label-form"><b>Student Image</b></label>
                 <div class="col-sm-10">
                     <img src="{{ asset('images/' . $student->student_image) }}" width="200" class="img-thumbnail" />
                 </div>
-            </div>
+            </div> --}}
         </div>
     </div>
 @endsection('content')

@@ -44,12 +44,12 @@ class StudentController extends Controller
         $request->validate([
             'student_name'          =>  'required',
             'student_email'         =>  'required|email|unique:students',
-            'student_image'         =>  'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048|dimensions:min_width=100,min_height=100,max_width=1000,max_height=1000'
+            // 'student_image'         =>  'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048|dimensions:min_width=100,min_height=100,max_width=1000,max_height=1000'
         ]);
 
-        $file_name = time() . '.' . request()->student_image->getClientOriginalExtension();
+        // $file_name = time() . '.' . request()->student_image->getClientOriginalExtension();
 
-        request()->student_image->move(public_path('images'), $file_name);
+        // request()->student_image->move(public_path('images'), $file_name);
 
         $student = new Student;
 
@@ -57,7 +57,7 @@ class StudentController extends Controller
         $student->student_email = $request->student_email;
         $student->student_gender = $request->student_gender;
         $student->id_categoria = $request->id_categoria;
-        $student->student_image = $file_name;
+        // $student->student_image = $file_name;
 
         $student->save();
 
@@ -100,17 +100,17 @@ class StudentController extends Controller
         $request->validate([
             'student_name'      =>  'required',
             'student_email'     =>  'required|email',
-            'student_image'     =>  'image|mimes:jpg,png,jpeg,gif,svg|max:2048|dimensions:min_width=100,min_height=100,max_width=1000,max_height=1000'
+            // 'student_image'     =>  'image|mimes:jpg,png,jpeg,gif,svg|max:2048|dimensions:min_width=100,min_height=100,max_width=1000,max_height=1000'
         ]);
 
-        $student_image = $request->hidden_student_image;
+        // $student_image = $request->hidden_student_image;
 
-        if($request->student_image != '')
-        {
-            $student_image = time() . '.' . request()->student_image->getClientOriginalExtension();
+        // if($request->student_image != '')
+        // {
+        //     $student_image = time() . '.' . request()->student_image->getClientOriginalExtension();
 
-            request()->student_image->move(public_path('images'), $student_image);
-        }
+        //     request()->student_image->move(public_path('images'), $student_image);
+        // }
 
         $student = Student::find($request->hidden_id);
 
@@ -122,7 +122,7 @@ class StudentController extends Controller
 
         $student->id_categoria = $request->id_categoria;
 
-        $student->student_image = $student_image;
+        // $student->student_image = $student_image;
 
         $student->save();
 
@@ -138,8 +138,8 @@ class StudentController extends Controller
     public function destroy(Student $student)
     {
 
-        $new_student_image = "images/{$student->student_image}";
-        unlink($new_student_image);
+        // $new_student_image = "images/{$student->student_image}";
+        // unlink($new_student_image);
 
         $student->delete();
 

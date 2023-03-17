@@ -5,6 +5,7 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\CategoriaController;
 use App\Models\Categoria;
 use App\Http\Controllers\PDFController;
+use App\Http\Controllers\RegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,3 +33,7 @@ Route::resource('students', StudentController::class);
 Route::resource('categorias', CategoriaController::class);
 
 Route::get('generate-pdf', [PDFController::class, 'generatePDF']);
+
+Route::get('/register', [RegisterController::class, 'show']);
+
+Route::post('/register', [RegisterController::class, 'register']);

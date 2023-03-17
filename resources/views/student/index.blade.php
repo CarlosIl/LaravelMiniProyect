@@ -14,13 +14,14 @@
                 <div class="col col-md-6"><b>Student Data</b></div>
                 <div class="col col-md-6">
                     <a href="{{ route('students.create') }}" class="btn btn-success btn-sm float-end">Add</a>
+                    <a href="generate-pdf" class="btn btn-info btn-sm float-end">Generar PDF</a>
                 </div>
             </div>
         </div>
         <div class="card-body">
             <table class="table table-bordered">
                 <tr>
-                    <th>Image</th>
+                    {{-- <th>Image</th> --}}
                     <th>Name</th>
                     <th>Email</th>
                     <th>Gender</th>
@@ -30,7 +31,7 @@
                 @if (count($data) > 0)
                     @foreach ($data as $row)
                         <tr>
-                            <td><img src="{{ asset('images/' . $row->student_image) }}" width="75" /></td>
+                            {{-- <td><img src="{{ asset('images/' . $row->student_image) }}" width="75" /></td> --}}
                             <td>{{ $row->student_name }}</td>
                             <td>{{ $row->student_email }}</td>
                             <td>{{ $row->student_gender }}</td>
