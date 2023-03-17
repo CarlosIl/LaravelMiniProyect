@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\CategoriaController;
 use App\Models\Categoria;
+use App\Http\Controllers\PDFController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,3 +30,5 @@ Route::resource('students', StudentController::class);
 // Route::get('categoria', [CategoriaController::class,'index']) ->name('categoria');
 
 Route::resource('categorias', CategoriaController::class);
+
+Route::get('generate-pdf', [PDFController::class, 'generatePDF']);
