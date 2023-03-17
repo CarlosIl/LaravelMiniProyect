@@ -3,9 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\CategoriaController;
-use App\Models\Categoria;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LogoutController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,8 +34,19 @@ Route::resource('students', StudentController::class);
 
 Route::resource('categorias', CategoriaController::class);
 
+//Para PDF
 Route::get('generate-pdf', [PDFController::class, 'generatePDF']);
 
+//Para página registro
 Route::get('/register', [RegisterController::class, 'show']);
 
 Route::post('/register', [RegisterController::class, 'register']);
+
+//Para página login
+Route::get('/login', [LoginController::class, 'show']);
+
+Route::post('/login', [LoginController::class, 'login']);
+
+Route::get('/home', [HomeController::class, 'index']);
+
+Route::get('/logout', [LogoutController::class, 'logout']);
