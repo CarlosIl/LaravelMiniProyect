@@ -26,7 +26,7 @@ use App\Http\Controllers\LogoutController;
 
 Route::resource('/', StudentController::class);
 
-Route::resource('students', StudentController::class);
+// Route::resource('students', StudentController::class);
 
 // Route::get('index', [StudentController::class,'index']) ->name('home');
 
@@ -52,4 +52,12 @@ Route::post('/login', [LoginController::class, 'login']);
 Route::get('/logout', [LogoutController::class, 'logout']);
 
 //Vista usuario normal
-Route::get('/verstu', [StudentController::class, 'indexUser']);
+// Route::get('/verstu', [StudentController::class, 'indexUser']);
+
+Route::middleware(['auth','user-access:user'])->group(function(){
+    Route::get('/verstu', [StudentController::class, 'indexUser']);
+});
+
+Route::middleware(['auth','user-access:admin'])->group(function(){
+    Route::resource('students', StudentController::class);
+});

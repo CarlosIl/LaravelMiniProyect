@@ -51,10 +51,4 @@ class User extends Authenticatable
         $this->attributes['password'] = bcrypt($value);
     }
 
-    //Para interactuar con el tipo de usuario
-    // protected function type(): Attribute{
-    //     return new Attribute(
-    //         get: fn ($value) => ["user","admin"][$value],
-    //     );
-    // }
 }

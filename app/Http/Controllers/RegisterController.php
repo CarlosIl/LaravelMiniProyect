@@ -10,8 +10,10 @@ use Illuminate\Support\Facades\Auth;
 class RegisterController extends Controller
 {
     public function show(){
-        if(Auth::check()){
+        if(Auth::check() && auth()->user()->type == 'admin'){
             return redirect('/students');
+        }elseif(Auth::check() && auth()->user()->type == 'user'){
+            return redirect('/verstu');
         }
         return view('auth.register');
     }
