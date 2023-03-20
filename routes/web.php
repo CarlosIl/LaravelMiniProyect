@@ -50,3 +50,6 @@ Route::post('/login', [LoginController::class, 'login']);
 // Route::get('/home', [HomeController::class, 'index']);
 
 Route::get('/logout', [LogoutController::class, 'logout']);
+
+//Vista usuario normal
+Route::get('/verstu', [StudentController::class, 'indexUser']);

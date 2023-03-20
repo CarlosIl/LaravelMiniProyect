@@ -20,7 +20,7 @@ class StudentController extends Controller
             return redirect('/login');
         }
         
-        $students = Student::latest()->paginate(5);
+        $students = Student::latest()->paginate(10);
         $categorias = Categoria::all();
 
         return view('student/index', compact('students','categorias'))->with('i', (request()->input('page', 1) - 1) * 5);
@@ -149,5 +149,13 @@ class StudentController extends Controller
         $student->delete();
 
         return redirect()->route('students.index')->with('success', 'Student Data deleted successfully');
+    }
+
+    public function indexUser()
+    {
+        $students = Student::get();
+        $categorias = Categoria::get();
+
+        return view('student/myPDF', compact('students','categorias'));
     }
 }
