@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Student;
 use App\Models\Categoria;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class StudentController extends Controller
 {
@@ -15,10 +16,14 @@ class StudentController extends Controller
      */
     public function index()
     {
-        $data = Student::latest()->paginate(5);
+        if(!Auth::check()){
+            return redirect('/login');
+        }
+        
+        $students = Student::latest()->paginate(5);
         $categorias = Categoria::all();
 
-        return view('student/index', compact('data','categorias'))->with('i', (request()->input('page', 1) - 1) * 5);
+        return view('student/index', compact('students','categorias'))->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
     /**

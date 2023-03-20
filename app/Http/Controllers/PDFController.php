@@ -19,7 +19,7 @@ class PDFController extends Controller
             'categorias' => $categorias
         ];
 
-        $pdf = PDF::loadView('myPDF', $data);
+        $pdf = PDF::loadView('student/myPDF', $data);
 
         return $pdf->download('students.pdf');
     }

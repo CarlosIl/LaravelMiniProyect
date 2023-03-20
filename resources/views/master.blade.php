@@ -22,6 +22,24 @@
                 <a class="nav-link" href="{{ route('categorias.index') }}">Categorias</a>
               </li>
           </div>
+          <ul class="navbar-nav me-5 mb-2 mb-lg-0">
+            @auth
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  {{ auth()->user()->name ?? auth()->user()->username }}
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li><a class="dropdown-item" href="#">Action</a></li>
+                  <li><a class="dropdown-item" href="#">Another action</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                </ul>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link disabled"></a>
+              </li>
+            @endauth
+          </ul>
         </div>
       </nav>
     <div class="container mt-5">

@@ -6,6 +6,7 @@ use App\Models\Categoria;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class CategoriaController extends Controller
 {
@@ -14,6 +15,10 @@ class CategoriaController extends Controller
      */
     public function index()
     {
+        if(!Auth::check()){
+            return redirect('/login');
+        }
+
         $data = Categoria::all();
 
         return view('categoria/todos_cat', compact('data'));
