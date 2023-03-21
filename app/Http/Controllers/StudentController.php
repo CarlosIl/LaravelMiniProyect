@@ -153,9 +153,13 @@ class StudentController extends Controller
 
     public function indexUser()
     {
+        // if(!Auth::check()){
+        //     return view('auth.login');
+        // }
+
         $students = Student::get();
         $categorias = Categoria::get();
 
-        return view('student/myPDF', compact('students','categorias'));
+        return view('student/user', compact('students','categorias'));
     }
 }

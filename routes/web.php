@@ -45,7 +45,8 @@ Route::post('/register', [RegisterController::class, 'register']);
 //Para página login
 Route::get('/login', [LoginController::class, 'show']);
 
-Route::post('/login', [LoginController::class, 'login']);
+//Poner name para arreglar error de redirección login
+Route::post('/login', [LoginController::class, 'login'])->name('login');
 
 // Route::get('/home', [HomeController::class, 'index']);
 
