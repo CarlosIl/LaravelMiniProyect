@@ -12,16 +12,23 @@
         <div class="card-header">
             <div class="row">
                 <div class="col col-md-6"><b>Student Data</b></div>
+                @if(auth()->user()->type == 'admin')
                 <div class="col col-md-6">
                     <a href="{{ route('students.create') }}" class="btn btn-success btn-sm float-end">Add</a>
                     <a href="generate-pdf" class="btn btn-info btn-sm float-end">Generar PDF</a>
                 </div>
+                @endif
             </div>
         </div>
         <div class="card-body">
-            @php($actions = true)
+            @if(auth()->user()->type == 'admin')
+                @php($actions = true)
+                {!! $students->links() !!}
+            @else
+                @php($actions = false)
+            @endif
+
             @include('student.table')
-            {!! $students->links() !!}
         </div>
     </div>
 

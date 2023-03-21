@@ -16,9 +16,9 @@ class StudentController extends Controller
      */
     public function index()
     {
-        if(!Auth::check()){
-            return redirect('/login');
-        }
+        // if(!Auth::check()){
+        //     return redirect('/login');
+        // }
         
         $students = Student::latest()->paginate(10);
         $categorias = Categoria::all();
@@ -160,6 +160,6 @@ class StudentController extends Controller
         $students = Student::get();
         $categorias = Categoria::get();
 
-        return view('student/user', compact('students','categorias'));
+        return view('student/index', compact('students','categorias'));
     }
 }
