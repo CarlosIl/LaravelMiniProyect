@@ -8,6 +8,7 @@ use App\Http\Controllers\PDFController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\LookoutController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,7 +25,7 @@ use App\Http\Controllers\LogoutController;
 //     return view('welcome');
 // });
 
-Route::resource('/', StudentController::class);
+Route::get('/', [LoginController::class, 'show']);
 
 // Route::resource('students', StudentController::class);
 
@@ -62,3 +63,9 @@ Route::middleware(['auth','user-access:user'])->group(function(){
 Route::middleware(['auth','user-access:admin'])->group(function(){
     Route::resource('students', StudentController::class);
 });
+
+Route::get('/ftp', function () {
+    return view('pruebas.prueba1');
+});
+
+Route::post('/ftp', [LookoutController::class, 'store']);

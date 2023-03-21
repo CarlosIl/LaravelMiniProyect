@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Student;
 use App\Models\Categoria;
+use App\Models\StudentFiles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class StudentController extends Controller
 {
@@ -49,12 +51,19 @@ class StudentController extends Controller
         $request->validate([
             'student_name'          =>  'required',
             'student_email'         =>  'required|email|unique:students',
-            // 'student_image'         =>  'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048|dimensions:min_width=100,min_height=100,max_width=1000,max_height=1000'
+            'student_image'         =>  'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048|dimensions:min_width=100,min_height=100,max_width=1000,max_height=1000'
         ]);
 
-        // $file_name = time() . '.' . request()->student_image->getClientOriginalExtension();
+        $file_name = time() . '.' . request()->student_image->getClientOriginalExtension();
 
-        // request()->student_image->move(public_path('images'), $file_name);
+        request()->student_image->move(public_path('images'), $file_name);
+
+        Storage::makeDirectory(request()->student_email);
+
+        if ($request->hasFile('student_image')) {
+            $file_name = time() . '.' . request()->student_image->getClientOriginalExtension();
+            Storage::disk('ftp')->put($file_name, fopen($request->file('student_image'), 'r+'));
+        }
 
         $student = new Student;
 
@@ -63,8 +72,16 @@ class StudentController extends Controller
         $student->student_gender = $request->student_gender;
         $student->id_categoria = $request->id_categoria;
         // $student->student_image = $file_name;
+        $student->student_ftp_path = $request->student_email;
 
         $student->save();
+
+        $file = new StudentFiles;
+
+        $file->file_name = $file_name;
+        $file->student_ftp_path = $student->id;
+
+        $file->save();
 
         return redirect()->route('students.index')->with('success', 'Student Added successfully.');
     }
