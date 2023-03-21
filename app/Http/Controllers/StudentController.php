@@ -8,6 +8,7 @@ use App\Models\StudentFiles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class StudentController extends Controller
 {
@@ -56,14 +57,9 @@ class StudentController extends Controller
 
         $file_name = time() . '.' . request()->student_image->getClientOriginalExtension();
 
-        request()->student_image->move(public_path('images'), $file_name);
+        // request()->student_image->move(public_path('images'), $file_name);
 
-        Storage::makeDirectory(request()->student_email);
-
-        if ($request->hasFile('student_image')) {
-            $file_name = time() . '.' . request()->student_image->getClientOriginalExtension();
-            Storage::disk('ftp')->put($file_name, fopen($request->file('student_image'), 'r+'));
-        }
+        $path = request()->student_email;
 
         $student = new Student;
 
@@ -72,16 +68,23 @@ class StudentController extends Controller
         $student->student_gender = $request->student_gender;
         $student->id_categoria = $request->id_categoria;
         // $student->student_image = $file_name;
-        $student->student_ftp_path = $request->student_email;
+        $student->student_ftp_path = $path;
 
         $student->save();
 
-        $file = new StudentFiles;
+        if ($request->hasFile('student_image')) {
+            $file_name = time() . '.' . request()->student_image->getClientOriginalExtension();
+            Storage::disk('ftp')->put("$path/$file_name", fopen($request->file('student_image'), 'r+'));
 
-        $file->file_name = $file_name;
-        $file->student_ftp_path = $student->id;
+            Storage::disk('ftp')->makeDirectory($path);
 
-        $file->save();
+            $file = new StudentFiles;
+
+            $file->file_name = $file_name;
+            $file->id_student = $student->id;
+    
+            $file->save();
+        }
 
         return redirect()->route('students.index')->with('success', 'Student Added successfully.');
     }
@@ -94,8 +97,18 @@ class StudentController extends Controller
      */
     public function show(Student $student)
     {
+        // $ficheros = DB::select('SELECT file_name FROM `student_files` WHERE id_student = ?',[$student->id]);
+        // $ficheros = intval($sql[0]->total);
+
+        $ficheros = Storage::disk('ftp')->files($student->student_ftp_path);
+        // $ficheros_final = [];
+        // foreach ($ficheros as $fichero){
+        //     $file = Storage::disk('ftp')->get($fichero);
+        //     $ficheros_final[] = $file;
+        // };
+
         $categorias = Categoria::all();
-        return view('student/show', compact('student','categorias'));
+        return view('student/show', compact('student','categorias','ficheros'));
     }
 
     /**
@@ -179,4 +192,10 @@ class StudentController extends Controller
 
         return view('student/index', compact('students','categorias'));
     }
+
+    // public function descargarArchivo($fichero)
+    // {
+    //     Storage::disk('ftp')->download($fichero);
+    //     // return view('welcome');
+    // }
 }

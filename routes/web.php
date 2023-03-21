@@ -69,3 +69,5 @@ Route::get('/ftp', function () {
 });
 
 Route::post('/ftp', [LookoutController::class, 'store']);
+
+// Route::get('/descargar/{fichero}', [StudentController::class, 'descargarArchivo'])->name('fichero');

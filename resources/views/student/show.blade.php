@@ -41,9 +41,11 @@
             </div>
             {{-- <div class="row mb-4">
                 <label class="col-sm-2 col-label-form"><b>Student Image</b></label>
+                @foreach ($ficheros as $fichero)
                 <div class="col-sm-10">
-                    <img src="{{ asset('images/' . $student->student_image) }}" width="200" class="img-thumbnail" />
+                    <a href="{{ route('descargar', ['fichero' => $fichero])}}" class="btn btn-primary btn-sm">Descargar {{$fichero}}</a>
                 </div>
+                @endforeach
             </div> --}}
         </div>
     </div>
