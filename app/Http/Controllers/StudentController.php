@@ -198,4 +198,48 @@ class StudentController extends Controller
     //     Storage::disk('ftp')->download($fichero);
     //     // return view('welcome');
     // }
+
+    /**
+     * Show the form for editing the specified resource.
+     * 
+     * @param  \App\Models\Student  $student
+     * @return \Illuminate\Http\Response
+     */
+    public function addFile(Student $student)
+    {
+        return view('student/file/add', compact('student'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @param  \App\Models\Student  $student
+     * @return \Illuminate\Http\Response
+     */
+    public function createFile(Request $request, Student $student)
+    {
+        $request->validate([
+            'student_image'         =>  'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048|dimensions:min_width=100,min_height=100,max_width=1000,max_height=1000'
+        ]);
+
+        $student = Student::find($request->hidden_id);
+        $path = $student->student_ftp_path;
+
+        if ($request->hasFile('student_image')) {
+            $file_name = time() . '.' . request()->student_image->getClientOriginalExtension();
+            Storage::disk("ftp")->makeDirectory($path);
+            Storage::disk("ftp")->put($file_name, fopen($request->file('student_image'), 'r+'));
+
+            $file = new StudentFiles;
+
+            $file->file_name = $file_name;
+            $file->id_student = $student->id;
+    
+            $file->save();
+        }
+
+        return redirect()->route('students.index')->with('success', 'El fichero ha sido añadido correctamente');
+    }
+
 }

@@ -39,7 +39,7 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
+            'url' => env('APP_URL') . '/storage',
             'visibility' => 'public',
             'throw' => false,
         ],
@@ -65,7 +65,7 @@ return [
         //     'password'      => env('TEST_FEED_SFTP_PASSWORD'),
         //     'privateKey'    => storage_path().'/app/'.ENV('TEST_FEED_SFTP_PRIVATE_KEY_FILE'),
         //     'timeout'       => env('TEST_FEED_SFTP_TIMEOUT')
-        
+
         //     // Optional FTP Settings...
         //     // 'ssl'        => true,
         //     // 'passphrase' => '',
@@ -80,6 +80,13 @@ return [
             'port' => 21,
             'username' => env('FTP_USERNAME'),
             'password' => env('FTP_PASSWORD'),
+            'root' => $ruta=".","/",
+
+            // Optional FTP Settings...
+            // 'root' => env('FTP_ROOT'),
+            // 'passive' => true,
+            // 'ssl' => true,
+            // 'timeout' => 30,
         ],
 
     ],

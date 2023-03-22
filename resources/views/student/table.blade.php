@@ -5,8 +5,8 @@
         <th>Email</th>
         <th>Gender</th>
         <th>Categoria</th>
-        @if($actions)
-        <th>Action</th>
+        @if ($actions)
+            <th>Action</th>
         @endif
     </tr>
     @if (count($students) > 0)
@@ -23,19 +23,18 @@
                     @endif
                 @endforeach
 
-                @if($actions)
-                <td>
-                    <form method="post" action="{{ route('students.destroy', $student->id) }}">
-                        @csrf
-                        @method('DELETE')
-                        <a href="{{ route('students.show', $student->id) }}"
-                            class="btn btn-primary btn-sm">View</a>
-                        <a href="{{ route('students.edit', $student->id) }}"
-                            class="btn btn-warning btn-sm">Edit</a>
-                        <input type="submit" class="btn btn-danger btn-sm" value="Delete" />
-                    </form>
-
-                </td>
+                @if ($actions)
+                    <td>
+                        <form method="post" action="{{ route('students.destroy', $student->id) }}">
+                            @csrf
+                            @method('DELETE')
+                            <a href="{{ route('students.show', $student->id) }}" class="btn btn-primary btn-sm">View</a>
+                            <a href="{{ route('students.edit', $student->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                            <a href="{{ route('addFile', $student->id) }}" class="btn btn-secondary btn-sm">Add File</a>
+                            <a href="{{ route('studentfiles.edit', $student->id) }}" class="btn btn-dark btn-sm">Delete File</a>
+                            <input type="submit" class="btn btn-danger btn-sm" value="Delete" />
+                        </form>
+                    </td>
                 @endif
             </tr>
         @endforeach

@@ -9,6 +9,7 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\LookoutController;
+use App\Http\Controllers\StudentFileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,3 +72,9 @@ Route::get('/ftp', function () {
 Route::post('/ftp', [LookoutController::class, 'store']);
 
 // Route::get('/descargar/{fichero}', [StudentController::class, 'descargarArchivo'])->name('fichero');
+
+Route::resource('studentfiles', StudentFileController::class);
+
+Route::get('/addFile/{student}', [StudentController::class, 'addFile'])->name('addFile');
+
+Route::post('/createFile', [StudentController::class, 'createFile'])->name('createFile');

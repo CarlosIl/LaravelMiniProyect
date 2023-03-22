@@ -32,13 +32,13 @@ class LoginController extends Controller
 
         Auth::login($user);
 
-            if(auth()->user()->type == 'admin'){
-                return redirect()->route('students.index');
-            }elseif(auth()->user()->type == 'user'){
-                return redirect()->to('/verstu');
-            }else{
-                return redirect()->to('/login')->withErrors('Login failed');
-            }
+        if(auth()->user()->type == 'admin'){
+            return redirect()->route('students.index');
+        }elseif(auth()->user()->type == 'user'){
+            return redirect()->to('/verstu');
+        }else{
+            return redirect()->to('/login')->withErrors('Login failed');
+        }
 
         // return $this->authenticated($request, $user);
     }
