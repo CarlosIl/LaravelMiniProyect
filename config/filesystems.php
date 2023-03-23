@@ -80,7 +80,6 @@ return [
             'port' => 21,
             'username' => env('FTP_USERNAME'),
             'password' => env('FTP_PASSWORD'),
-            'root' => $ruta=".","/",
 
             // Optional FTP Settings...
             // 'root' => env('FTP_ROOT'),

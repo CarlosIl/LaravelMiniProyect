@@ -77,4 +77,12 @@ Route::resource('studentfiles', StudentFileController::class);
 
 Route::get('/addFile/{student}', [StudentController::class, 'addFile'])->name('addFile');
 
-Route::post('/createFile', [StudentController::class, 'createFile'])->name('createFile');
+Route::post('/addFile', [StudentController::class, 'createFile'])->name('createFile');
+
+Route::get('/deleteFile/{student}', [StudentController::class, 'deleteFile'])->name('deleteFile');
+
+Route::post('/deleteFile', [StudentController::class, 'destroyFile'])->name('destroyFile');
+
+Route::get('/downFile/{student}', [StudentController::class, 'showFile'])->name('showFile');
+
+Route::post('/downFile', [StudentController::class, 'downFile'])->name('downFile');

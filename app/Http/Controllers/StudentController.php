@@ -107,6 +107,9 @@ class StudentController extends Controller
         //     $ficheros_final[] = $file;
         // };
 
+        $ficherosStd = DB::select('SELECT id,file_name FROM `student_files` WHERE id_student = ?',[$student->id]);
+        $ficheros = json_decode(json_encode($ficherosStd), true);
+
         $categorias = Categoria::all();
         return view('student/show', compact('student','categorias','ficheros'));
     }
@@ -240,6 +243,56 @@ class StudentController extends Controller
         }
 
         return redirect()->route('students.index')->with('success', 'El fichero ha sido añadido correctamente');
+    }
+
+    public function deleteFile(Student $student)
+    {
+        //$ficheros = Storage::disk('ftp')->files($student->student_ftp_path);
+        $ficherosStd = DB::select('SELECT id,file_name FROM `student_files` WHERE id_student = ?',[$student->id]);
+        $ficheros = json_decode(json_encode($ficherosStd), true);
+
+        return view('student/file/delete', compact('ficheros','student'));
+    }
+
+    public function destroyFile(Request $request,Student $student)
+    {
+        $id = $request->fichero;
+
+        $student = Student::find($request->hidden_id);
+        $path = $student->student_ftp_path;
+
+        $file = StudentFiles::find($id);
+        $file_name = $file->file_name;
+
+        Storage::disk("ftp")->makeDirectory($path);
+        Storage::disk("ftp")->delete($file_name);
+
+        $file->delete();
+
+        return redirect()->route('students.index')->with('success', 'El fichero se ha eliminado satisfactoriamente');
+    }
+
+    public function showFile(Student $student)
+    {
+        //$ficheros = Storage::disk('ftp')->files($student->student_ftp_path);
+        $ficherosStd = DB::select('SELECT id,file_name FROM `student_files` WHERE id_student = ?',[$student->id]);
+        $ficheros = json_decode(json_encode($ficherosStd), true);
+
+        return view('student/file/download', compact('ficheros','student'));
+    }
+
+    public function downFile(Request $request,Student $student)
+    {
+        $id = $request->fichero;
+
+        $student = Student::find($request->hidden_id);
+        $path = $student->student_ftp_path;
+
+        $file = StudentFiles::find($id);
+        $file_name = $file->file_name;
+
+        Storage::disk("ftp")->makeDirectory($path);
+        return Storage::disk('ftp')->download($file_name);
     }
 
 }
