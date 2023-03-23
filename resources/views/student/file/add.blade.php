@@ -3,14 +3,21 @@
 @section('content')
 
 <div class="card">
-	<div class="card-header">Añadir Fichero</div>
+	<div class="card-header">
+		<div class="row">
+			<div class="col col-md-6"><b>Añadir fichero</b></div>
+			<div class="col col-md-6">
+				<a href="{{ route('files.index', $student->id) }}" class="btn btn-secondary btn-sm float-end">Volver</a>
+			</div>
+		</div>
+	</div>
 	<div class="card-body">
-		<form method="post" action="{{ route('createFile', $student->id) }}" enctype="multipart/form-data">
+		<form method="post" action="{{ route('files.store', $student->id) }}" enctype="multipart/form-data">
 			@csrf
 			<div class="row mb-4">
 				<label class="col-sm-2 col-label-form">Elige un fichero</label>
 				<div class="col-sm-10">
-					<input type="file" name="student_image" class="form-control"/>
+					<input type="file" name="student_file" class="form-control"/>
 				</div>
 			</div>
 			<div class="text-center">

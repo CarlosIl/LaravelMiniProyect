@@ -52,10 +52,9 @@ class StudentController extends Controller
         $request->validate([
             'student_name'          =>  'required',
             'student_email'         =>  'required|email|unique:students',
-            'student_image'         =>  'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048|dimensions:min_width=100,min_height=100,max_width=1000,max_height=1000'
+            'student_file'         =>  'nullable|file'
+            // 'student_image'         =>  'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2048|dimensions:min_width=100,min_height=100,max_width=1000,max_height=1000'
         ]);
-
-        $file_name = time() . '.' . request()->student_image->getClientOriginalExtension();
 
         // request()->student_image->move(public_path('images'), $file_name);
 
@@ -72,11 +71,9 @@ class StudentController extends Controller
 
         $student->save();
 
-        if ($request->hasFile('student_image')) {
-            $file_name = time() . '.' . request()->student_image->getClientOriginalExtension();
-            Storage::disk('ftp')->put("$path/$file_name", fopen($request->file('student_image'), 'r+'));
-
-            Storage::disk('ftp')->makeDirectory($path);
+        if ($request->hasFile('student_file')) {
+            $file_name = time() . '_' . request()->student_file->getClientOriginalName();
+            Storage::disk('ftp')->put("$path/$file_name", fopen($request->file('student_file'), 'r+'));
 
             $file = new StudentFiles;
 
@@ -85,6 +82,8 @@ class StudentController extends Controller
     
             $file->save();
         }
+
+        Storage::disk('ftp')->makeDirectory($path);
 
         return redirect()->route('students.index')->with('success', 'Student Added successfully.');
     }
@@ -162,6 +161,14 @@ class StudentController extends Controller
 
         // $student->student_image = $student_image;
 
+
+        $path = $student->student_ftp_path;
+        $new_path = $request->student_email;
+
+        Storage::disk("ftp")->move($path, $new_path);
+        
+        $student->student_ftp_path = $new_path;
+
         $student->save();
 
         return redirect()->route('students.index')->with('success', 'El estudiante ha sido editado correctamente');
@@ -175,13 +182,24 @@ class StudentController extends Controller
      */
     public function destroy(Student $student)
     {
-
+        // Para eliminar imagen o fichero en Laravel Storage
         // $new_student_image = "images/{$student->student_image}";
         // unlink($new_student_image);
+        $sql = DB::select('SELECT count(*) as total FROM student_files WHERE id_student = ?',[$student->id]);
+        $ficheros_con_students = intval($sql[0]->total);
+        
+        if ($ficheros_con_students == 0) {
+            $path = $student->student_ftp_path;
+            Storage::disk("ftp")->deleteDirectory($path);
+            $student->delete();
+    
+            return redirect()->route('students.index')->with('success', 'Student Data deleted successfully');
+        }else{
 
-        $student->delete();
+            return redirect()->route('students.index')->with('error', "ERROR: Este usuario tiene $ficheros_con_students documentos en su directorio");
+        }
 
-        return redirect()->route('students.index')->with('success', 'Student Data deleted successfully');
+
     }
 
     public function indexUser()
@@ -194,105 +212,6 @@ class StudentController extends Controller
         $categorias = Categoria::get();
 
         return view('student/index', compact('students','categorias'));
-    }
-
-    // public function descargarArchivo($fichero)
-    // {
-    //     Storage::disk('ftp')->download($fichero);
-    //     // return view('welcome');
-    // }
-
-    /**
-     * Show the form for editing the specified resource.
-     * 
-     * @param  \App\Models\Student  $student
-     * @return \Illuminate\Http\Response
-     */
-    public function addFile(Student $student)
-    {
-        return view('student/file/add', compact('student'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     * 
-     * @param \Illuminate\Http\Request $request
-     * @param  \App\Models\Student  $student
-     * @return \Illuminate\Http\Response
-     */
-    public function createFile(Request $request, Student $student)
-    {
-        $request->validate([
-            'student_image'         =>  'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048|dimensions:min_width=100,min_height=100,max_width=1000,max_height=1000'
-        ]);
-
-        $student = Student::find($request->hidden_id);
-        $path = $student->student_ftp_path;
-
-        if ($request->hasFile('student_image')) {
-            $file_name = time() . '.' . request()->student_image->getClientOriginalExtension();
-            Storage::disk("ftp")->makeDirectory($path);
-            Storage::disk("ftp")->put($file_name, fopen($request->file('student_image'), 'r+'));
-
-            $file = new StudentFiles;
-
-            $file->file_name = $file_name;
-            $file->id_student = $student->id;
-    
-            $file->save();
-        }
-
-        return redirect()->route('students.index')->with('success', 'El fichero ha sido añadido correctamente');
-    }
-
-    public function deleteFile(Student $student)
-    {
-        //$ficheros = Storage::disk('ftp')->files($student->student_ftp_path);
-        $ficherosStd = DB::select('SELECT id,file_name FROM `student_files` WHERE id_student = ?',[$student->id]);
-        $ficheros = json_decode(json_encode($ficherosStd), true);
-
-        return view('student/file/delete', compact('ficheros','student'));
-    }
-
-    public function destroyFile(Request $request,Student $student)
-    {
-        $id = $request->fichero;
-
-        $student = Student::find($request->hidden_id);
-        $path = $student->student_ftp_path;
-
-        $file = StudentFiles::find($id);
-        $file_name = $file->file_name;
-
-        Storage::disk("ftp")->makeDirectory($path);
-        Storage::disk("ftp")->delete($file_name);
-
-        $file->delete();
-
-        return redirect()->route('students.index')->with('success', 'El fichero se ha eliminado satisfactoriamente');
-    }
-
-    public function showFile(Student $student)
-    {
-        //$ficheros = Storage::disk('ftp')->files($student->student_ftp_path);
-        $ficherosStd = DB::select('SELECT id,file_name FROM `student_files` WHERE id_student = ?',[$student->id]);
-        $ficheros = json_decode(json_encode($ficherosStd), true);
-
-        return view('student/file/download', compact('ficheros','student'));
-    }
-
-    public function downFile(Request $request,Student $student)
-    {
-        $id = $request->fichero;
-
-        $student = Student::find($request->hidden_id);
-        $path = $student->student_ftp_path;
-
-        $file = StudentFiles::find($id);
-        $file_name = $file->file_name;
-
-        Storage::disk("ftp")->makeDirectory($path);
-        return Storage::disk('ftp')->download($file_name);
     }
 
 }

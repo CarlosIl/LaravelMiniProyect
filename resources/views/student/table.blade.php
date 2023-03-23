@@ -30,9 +30,7 @@
                             @method('DELETE')
                             <a href="{{ route('students.show', $student->id) }}" class="btn btn-primary btn-sm">View</a>
                             <a href="{{ route('students.edit', $student->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                            <a href="{{ route('addFile', $student->id) }}" class="btn btn-secondary btn-sm">Add Files</a>
-                            <a href="{{ route('deleteFile', $student->id) }}" class="btn btn-dark btn-sm">Delete Files</a>
-                            <a href="{{ route('showFile', $student->id) }}" class="btn btn-ligh btn-sm">Download Files</a>
+                            <a href="{{ route('files.index', $student->id) }}" class="btn btn-secondary btn-sm">Files</a>
                             <input type="submit" class="btn btn-danger btn-sm" value="Delete" />
                         </form>
                     </td>

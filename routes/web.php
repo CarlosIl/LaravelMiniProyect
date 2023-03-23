@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\RegisterController;
@@ -71,18 +72,17 @@ Route::get('/ftp', function () {
 
 Route::post('/ftp', [LookoutController::class, 'store']);
 
-// Route::get('/descargar/{fichero}', [StudentController::class, 'descargarArchivo'])->name('fichero');
+//Ir al index de los ficheros
+Route::get('/files/{student}', [FileController::class, 'index'])->name('files.index');
 
-Route::resource('studentfiles', StudentFileController::class);
+//Mostrar y descargar ficheros
+Route::get('/files/show/{student}', [FileController::class, 'show'])->name('files.show');
+Route::post('/files/download', [FileController::class, 'download'])->name('files.download');
 
-Route::get('/addFile/{student}', [StudentController::class, 'addFile'])->name('addFile');
+//Crear y almacenar ficheros
+Route::get('/files/create/{student}', [FileController::class, 'create'])->name('files.create');
+Route::post('/files/store', [FileController::class, 'store'])->name('files.store');
 
-Route::post('/addFile', [StudentController::class, 'createFile'])->name('createFile');
-
-Route::get('/deleteFile/{student}', [StudentController::class, 'deleteFile'])->name('deleteFile');
-
-Route::post('/deleteFile', [StudentController::class, 'destroyFile'])->name('destroyFile');
-
-Route::get('/downFile/{student}', [StudentController::class, 'showFile'])->name('showFile');
-
-Route::post('/downFile', [StudentController::class, 'downFile'])->name('downFile');
+//Mostrar y eliminar ficheros
+Route::get('/files/delete/{student}', [FileController::class, 'delete'])->name('files.delete');
+Route::post('/files/destroy', [FileController::class, 'destroy'])->name('files.destroy');
