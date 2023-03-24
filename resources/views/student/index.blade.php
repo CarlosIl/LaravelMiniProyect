@@ -26,12 +26,17 @@
         <div class="card-body">
             @if (auth()->user()->type == 'admin')
                 @php($actions = true)
-                {!! $students->links() !!}
+
             @else
                 @php($actions = false)
             @endif
 
             @include('student.table')
+
+            {{-- Para la paginación --}}
+            @if (auth()->user()->type == 'admin')
+                {!! $students->links() !!}
+            @endif
         </div>
     </div>
 @endsection

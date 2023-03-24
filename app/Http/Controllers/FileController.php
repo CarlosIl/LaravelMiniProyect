@@ -32,7 +32,7 @@ class FileController extends Controller
     public function store(Request $request, Student $student)
     {
         $request->validate([
-            'student_file'         =>  'required|file'
+            'student_file'         =>  'nullable|file|max:41943040'
         ]);
 
         $student = Student::find($request->hidden_id);
@@ -41,8 +41,13 @@ class FileController extends Controller
         if ($request->hasFile('student_file')) {
             // $file_name = request()->student_image->getClientOriginalName() . '_' . time() . '.' . request()->student_image->getClientOriginalExtension();
             $file_name = time() . '_' . request()->student_file->getClientOriginalName();
-            Storage::disk("ftp")->makeDirectory($path);
-            Storage::disk("ftp")->put($file_name, fopen($request->file('student_file'), 'r+'));
+
+            try {
+                Storage::disk("ftp")->makeDirectory($path);
+                Storage::disk("ftp")->put($file_name, fopen($request->file('student_file'), 'r+'));
+            } catch (\Throwable $th) {
+                Storage::disk("sftp")->put("$path/$file_name", fopen($request->file('student_file'), 'r+'));
+            }
 
             $file = new StudentFiles;
 
@@ -76,8 +81,14 @@ class FileController extends Controller
         $file = StudentFiles::find($id);
         $file_name = $file->file_name;
 
-        Storage::disk("ftp")->makeDirectory($path);
-        return Storage::disk('ftp')->download($file_name);
+        try {
+            Storage::disk("ftp")->makeDirectory($path);
+            return Storage::disk('ftp')->download($file_name);
+        } catch (\Throwable $th) {
+            return Storage::disk('sftp')->download("$path/$file_name");
+        }
+
+
     }
 
     /**
@@ -118,8 +129,12 @@ class FileController extends Controller
         $file = StudentFiles::find($id);
         $file_name = $file->file_name;
 
-        Storage::disk("ftp")->makeDirectory($path);
-        Storage::disk("ftp")->delete($file_name);
+        try {
+            Storage::disk("ftp")->makeDirectory($path);
+            Storage::disk("ftp")->delete($file_name);
+        } catch (\Throwable $th) {
+            Storage::disk("sftp")->delete("$path/$file_name");
+        }
 
         $file->delete();
 

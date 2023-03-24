@@ -56,23 +56,23 @@ return [
             'throw' => false,
         ],
 
-        // 'test-sftp' => [
+        'sftp' => [
 
-        //     'driver'        => 'sftp',
-        //     'host'          => env('TEST_FEED_SFTP_HOST'),
-        //     'port'          => env('TEST_FEED_SFTP_PORT'),
-        //     'username'      => env('TEST_FEED_SFTP_USERNAME_SERVICES'),
-        //     'password'      => env('TEST_FEED_SFTP_PASSWORD'),
-        //     'privateKey'    => storage_path().'/app/'.ENV('TEST_FEED_SFTP_PRIVATE_KEY_FILE'),
-        //     'timeout'       => env('TEST_FEED_SFTP_TIMEOUT')
+            'driver'        => 'sftp',
+            'host'          => env('FTP_HOST'),
+            'port'          => 22,
+            'username'      => env('FTP_USERNAME'),
+            'password'      => env('FTP_PASSWORD'),
+            // 'privateKey'    => storage_path().'/app/'.ENV('TEST_FEED_SFTP_PRIVATE_KEY_FILE'),
+            // 'timeout'       => env('TEST_FEED_SFTP_TIMEOUT')
 
-        //     // Optional FTP Settings...
-        //     // 'ssl'        => true,
-        //     // 'passphrase' => '',
-        //     // 'root'       => '/',
-        //     // 'passive'    => true,
-        //     // 'timeout'    => 30,
-        // ],
+            // Optional FTP Settings...
+            // 'ssl'        => true,
+            // 'passphrase' => '',
+            // 'root'       => '/',
+            // 'passive'    => true,
+            // 'timeout'    => 30,
+        ],
 
         'ftp' => [
             'driver' => 'ftp',

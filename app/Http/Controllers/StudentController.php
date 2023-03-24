@@ -71,9 +71,20 @@ class StudentController extends Controller
 
         $student->save();
 
+        try {
+            Storage::disk('ftp')->makeDirectory($path);
+        } catch (\Throwable $th) {
+            Storage::disk('sftp')->makeDirectory($path);
+        }
+
         if ($request->hasFile('student_file')) {
             $file_name = time() . '_' . request()->student_file->getClientOriginalName();
-            Storage::disk('ftp')->put("$path/$file_name", fopen($request->file('student_file'), 'r+'));
+            try {
+                Storage::disk('ftp')->makeDirectory($path);
+                Storage::disk('ftp')->put("$file_name", fopen($request->file('student_file'), 'r+'));
+            } catch (\Throwable $th) {
+                Storage::disk('sftp')->put("$path/$file_name", fopen($request->file('student_file'), 'r+'));
+            }
 
             $file = new StudentFiles;
 
@@ -82,8 +93,6 @@ class StudentController extends Controller
     
             $file->save();
         }
-
-        Storage::disk('ftp')->makeDirectory($path);
 
         return redirect()->route('students.index')->with('success', 'Student Added successfully.');
     }
@@ -99,7 +108,7 @@ class StudentController extends Controller
         // $ficheros = DB::select('SELECT file_name FROM `student_files` WHERE id_student = ?',[$student->id]);
         // $ficheros = intval($sql[0]->total);
 
-        $ficheros = Storage::disk('ftp')->files($student->student_ftp_path);
+        // $ficheros = Storage::disk('ftp')->files($student->student_ftp_path);
         // $ficheros_final = [];
         // foreach ($ficheros as $fichero){
         //     $file = Storage::disk('ftp')->get($fichero);
@@ -165,8 +174,12 @@ class StudentController extends Controller
         $path = $student->student_ftp_path;
         $new_path = $request->student_email;
 
-        Storage::disk("ftp")->move($path, $new_path);
-        
+        try {
+            Storage::disk("ftp")->move($path, $new_path);
+        } catch (\Throwable $th) {
+            Storage::disk("sftp")->move($path, $new_path);
+        }
+
         $student->student_ftp_path = $new_path;
 
         $student->save();
@@ -190,7 +203,13 @@ class StudentController extends Controller
         
         if ($ficheros_con_students == 0) {
             $path = $student->student_ftp_path;
-            Storage::disk("ftp")->deleteDirectory($path);
+
+            try {
+                Storage::disk("ftp")->deleteDirectory($path);
+            } catch (\Throwable $th) {
+                Storage::disk("sftp")->deleteDirectory($path);
+            }
+
             $student->delete();
     
             return redirect()->route('students.index')->with('success', 'Student Data deleted successfully');
