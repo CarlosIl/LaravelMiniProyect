@@ -13,6 +13,9 @@
           <li class="nav-item">
             <a class="nav-link" href="{{ route('categorias.index') }}">Categorias</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="/turnos">Turnos</a>
+          </li>
       </div>
       @endif
       <ul class="navbar-nav me-5 mb-2 mb-lg-0">

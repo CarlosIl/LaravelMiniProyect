@@ -86,3 +86,7 @@ Route::post('/files/store', [FileController::class, 'store'])->name('files.store
 //Mostrar y eliminar ficheros
 Route::get('/files/delete/{student}', [FileController::class, 'delete'])->name('files.delete');
 Route::post('/files/destroy', [FileController::class, 'destroy'])->name('files.destroy');
+
+Route::get('/turnos', function () {
+    return view('turno.index');
+});
