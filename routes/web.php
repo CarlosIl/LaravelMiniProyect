@@ -7,10 +7,9 @@ use App\Http\Controllers\FileController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\RegisterController;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\LookoutController;
-use App\Http\Controllers\StudentFileController;
+use App\Http\Controllers\TurnoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -87,6 +86,10 @@ Route::post('/files/store', [FileController::class, 'store'])->name('files.store
 Route::get('/files/delete/{student}', [FileController::class, 'delete'])->name('files.delete');
 Route::post('/files/destroy', [FileController::class, 'destroy'])->name('files.destroy');
 
-Route::get('/turnos', function () {
-    return view('turno.index');
-});
+// Route::resource('/turnos', TurnoController::class);
+Route::get('/turnos', [TurnoController::class, 'index'])->name('turno.index');
+Route::post('/turnos/crear', [TurnoController::class, 'crearTurno'])->name('turno.crear');
+Route::get('/turnos/buscar', [TurnoController::class, 'buscarTurno'])->name('turno.buscar');
+Route::get('/turnos/{turno_choose}/select', [TurnoController::class, 'seleccionarTurno'])->name('turno.seleccionar');
+Route::get('/turnos/{turno_choose}/dia', [TurnoController::class, 'crearDia'])->name('turno.dia');
+Route::get('/turnos/horario', [TurnoController::class, 'buscarHorario'])->name('turno.horario');

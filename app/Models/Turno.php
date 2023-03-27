@@ -9,5 +9,5 @@ class Turno extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['descripcion'];
+    protected $fillable = ['id', 'descripcion'];
 }

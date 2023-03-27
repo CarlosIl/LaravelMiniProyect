@@ -12,11 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('lineas_turnos', function (Blueprint $table) {
+            $table->id();
+            $table->smallInteger('dia');
             $table->unsignedBigInteger('id_turno');
-            $table->foreign("id_turno")->references('id_turno')->on('turnos')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign("id_turno")->references('id')->on('turnos')->onDelete('cascade')->onUpdate('cascade');
             $table->unsignedBigInteger('id_horario');
-            $table->foreign("id_horario")->references('id_horario')->on('horarios')->onDelete('cascade')->onUpdate('cascade');
-            $table->id('dia');
+            $table->foreign("id_horario")->references('id')->on('horarios')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

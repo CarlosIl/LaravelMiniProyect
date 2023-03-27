@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Horario;
+use App\Models\Lineas_turno;
 use App\Models\Turno;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -53,5 +54,20 @@ class AddTurnoSeeder extends Seeder
         ];
 
         Horario::insert($horario);
+
+        $dia = [
+            [
+                'dia' => 1,
+                'id_turno' => 1,
+                'id_horario' => 2
+            ],
+            [
+                'dia' => 1,
+                'id_turno' => 2,
+                'id_horario' => 3
+            ],
+        ];
+
+        Lineas_turno::insert($dia);
     }
 }

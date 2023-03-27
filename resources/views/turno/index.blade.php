@@ -16,53 +16,57 @@
 
 @endif
 
+{{-- @if ($mostrar_dias)
+	@dd($dias)
+@endif --}}
+
 <div class="card">
-	<div class="card-header">Add Student</div>
+	<div class="card-header"><b>Turno</b></div>
 	<div class="card-body">
-		<form method="post" action="{{ route('students.store') }}" enctype="multipart/form-data">
+		<form method="post" action="{{ route('turno.crear') }}" enctype="multipart/form-data">
 			@csrf
 			<div class="row mb-3">
-				<label class="col-sm-2 col-label-form">Student Name</label>
-				<div class="col-sm-10">
-					<input type="text" name="student_name" class="form-control" />
+				<label class="col-sm-2 col-label-form">Código</label>
+				<div class="col-sm-9">
+					@if($mostrar_dias)
+					<input type="number" name="id_turno" class="form-control" value="{{$turno_choose->id}}" disabled/>
+					@else
+					<input type="number" name="id_turno" class="form-control" />
+					@endif
+				</div>
+				<div class="col-sm">
+					<a href="{{ route('turno.buscar') }}" class="btn btn-secondary btn-sm float-end"><span class="material-symbols-outlined">search</span></a>
 				</div>
 			</div>
 			<div class="row mb-3">
-				<label class="col-sm-2 col-label-form">Student Email</label>
+				<label class="col-sm-2 col-label-form">Descripción</label>
 				<div class="col-sm-10">
-					<input type="text" name="student_email" class="form-control" />
-				</div>
-			</div>
-			<div class="row mb-4">
-				<label class="col-sm-2 col-label-form">Student Gender</label>
-				<div class="col-sm-10">
-					<select name="student_gender" class="form-control">
-						<option value="Male">Male</option>
-						<option value="Female">Female</option>
-					</select>
-				</div>
-			</div>
-			{{-- <div class="row mb-4">
-				<label class="col-sm-2 col-label-form">Categoria</label>
-				<div class="col-sm-10">
-					<select name="id_categoria" class="form-control">
-						@foreach ($categorias as $categoria)
-							<option value="{{$categoria->id}}">{{$categoria->descripcion}}</option>
-						@endforeach
-					</select>
-				</div>
-			</div> --}}
-			<div class="row mb-4">
-				<label class="col-sm-2 col-label-form">Student Image</label>
-				<div class="col-sm-10">
-					<input type="file" name="student_file" />
+					@if($mostrar_dias)
+					<input type="text" name="descripcion" class="form-control" value="{{$turno_choose->descripcion}}" disabled/>
+					@else
+					<input type="text" name="descripcion" class="form-control" />
+					@endif
 				</div>
 			</div>
 			<div class="text-center">
-				<input type="submit" class="btn btn-primary" value="Add" />
+				@if($mostrar_dias)
+				<input type="submit" class="btn btn-primary" value="Añadir" disabled/>
+				@else
+				<input type="submit" class="btn btn-primary" value="Añadir" />
+				@endif
 			</div>	
 		</form>
 	</div>
 </div>
+
+@if ($mostrar_dias)
+	<br>
+	{{-- @php
+		$diasStd = DB::select('SELECT dia, horarios.id_horario, horarios.descripcion FROM lineas_turnos JOIN horarios ON lineas_turnos.id_horario = horarios.id_horario WHERE id_turno = ?',[$turno_choose->id]);
+        $dias = json_decode(json_encode($diasStd), true);
+	@endphp --}}
+	@include('turno.dias')
+@endif
+
 
 @endsection('content')
