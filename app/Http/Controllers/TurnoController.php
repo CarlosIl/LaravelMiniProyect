@@ -145,4 +145,29 @@ class TurnoController extends Controller
             return redirect()->route('turno.index', compact('mostrar_dias'))->with('error', "ERROR: Existen $conexiones dias creados en este turno");
         }
     }
+
+    public function busquedaDeTurno(Request $request)
+    {
+        // if($request->buscarPor == 'id'){
+        //     $request->validate([
+        //         'loBuscado'         =>  'required|number'
+        //     ]);
+        // }else{
+        //     $request->validate([
+        //         'loBuscado'         =>  'required|text'
+        //     ]);
+        // }
+        $turnos = [];
+        if($request->buscarPor == 'id'){
+            $buscarId = intval($request->loBuscado);
+
+            $turnos = Turno::find(4)->get();
+            return view('turno.buscar', compact('turnos'));
+        }else{
+            $buscarDesc = $request->loBuscado;
+            $turnos = Turno::where('descripcion', $buscarDesc)->get();
+            return view('turno.buscar', compact('turnos'));
+        }
+
+    }
 }

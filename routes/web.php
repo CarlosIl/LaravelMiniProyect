@@ -115,3 +115,6 @@ Route::post('/turnos/actualizar', [TurnoController::class, 'actualizarTurno'])->
 
 //Ir al index de turnos con el turno seleccionado
 Route::get('/turnos/{turno_choose}/eliminar', [TurnoController::class, 'eliminarTurno'])->name('turno.eliminar');
+
+//Volver a index de turnos con ese turno y editado 
+Route::post('/turnos/busqueda', [TurnoController::class, 'busquedaDeTurno'])->name('turno.busqueda');

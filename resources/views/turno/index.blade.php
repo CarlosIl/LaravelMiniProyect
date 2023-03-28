@@ -82,6 +82,7 @@
         $dias = json_decode(json_encode($diasStd), true);
 	@endphp --}}
 	@include('turno.dias')
+	{{-- @yield('turno_content') --}}
 @endif
 
 

@@ -1,3 +1,7 @@
+{{-- @extends('turno/index')
+
+@section('turno_content') --}}
+
 <div class="card">
     <div class="card-header">
         <div class="row">
@@ -30,3 +34,5 @@
         </table>
     </div>
 </div>
+
+{{-- @endsection('turno_content') --}}

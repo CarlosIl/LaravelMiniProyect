@@ -31,17 +31,20 @@
                 </tr>
             @endif
         </table>
-        <form method="post" action="{{ route('turno.actualizar') }}" enctype="multipart/form-data">
+        <form method="post" action="{{ route('turno.busqueda') }}" enctype="multipart/form-data">
             @csrf
 			<div class="row mb-3">
-                <div class="col-sm-5">
-					<select name="">
+                <div class="col-sm-2">
+					<select name="buscarPor">
                         <option value="id">Código</option>
                         <option value="descripcion">Descripción</option>
                     </select>
 				</div>
 				<div class="col-sm-5">
-					<input type="text" name="" class="form-control"/>
+					<input type="text" name="loBuscado" class="form-control"/>
+				</div>
+                <div class="col-sm-1">
+					<button type="submit" title="Buscar Turno" class="btn btn-secondary btn-sm float-end rounded-circle"><span class="material-symbols-outlined">search</span></button>
 				</div>
 			</div>
         </form>
