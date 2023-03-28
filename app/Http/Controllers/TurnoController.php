@@ -24,7 +24,7 @@ class TurnoController extends Controller
 
         $request->validate([
             'id'         =>  'nullable|unique:turnos',
-            'descripcion'         =>  'required'
+            'descripcion'         =>  'required|unique:turnos'
         ]);
 
         $turno_choose = new Turno();
@@ -104,5 +104,45 @@ class TurnoController extends Controller
         $mostrar_dias = true;
         
         return view('turno.index', compact('dias','turno_choose','mostrar_dias'));
+    }
+
+    public function editarTurno(Turno $turno_choose)
+    {
+        return view('turno/editar', compact('turno_choose'));
+    }
+
+    public function actualizarTurno(Request $request)
+    {
+        $request->validate([
+            'descripcion'         =>  'required|unique:turnos'
+        ]);
+
+        $turno_choose = Turno::find($request->id);
+        $turno_choose->descripcion = $request->descripcion;
+        $turno_choose->save();
+
+        $diasStd = DB::select('SELECT dia, horarios.id as id_horario, horarios.descripcion FROM lineas_turnos JOIN horarios ON lineas_turnos.id_horario = horarios.id WHERE id_turno = ?',[$turno_choose->id]);
+        $dias = json_decode(json_encode($diasStd), true);
+        $mostrar_dias = true;
+        
+        return view('turno.index', compact('dias','turno_choose','mostrar_dias'));
+    }
+
+    public function eliminarTurno(Turno $turno_choose)
+    {
+        $sql = DB::select('SELECT count(*) as total FROM lineas_turnos WHERE id_turno = ?',[$turno_choose->id]);
+        $conexiones = intval($sql[0]->total);
+
+        $mostrar_dias = false;
+
+        if ($conexiones == 0) {
+
+            $turno_choose->delete();
+    
+            return redirect()->route('turno.index', compact('mostrar_dias'))->with('success', 'El turno ha sido eliminado');
+        }else{
+
+            return redirect()->route('turno.index', compact('mostrar_dias'))->with('error', "ERROR: Existen $conexiones dias creados en este turno");
+        }
     }
 }

@@ -39,7 +39,7 @@
 					@endif
 				</div>
                 <div class="col-sm-1">
-					<a href="{{ route('turno.horario', $turno_choose) }}" class="btn btn-secondary btn-sm float-end"><span class="material-symbols-outlined">search</span></a>
+					<a href="{{ route('turno.horario', $turno_choose) }}" title="Buscar Horario" class="btn btn-primary btn-sm float-end rounded-circle"><span class="material-symbols-outlined">search</span></a>
 				</div>
                 <div class="col-sm-8">
 					@if($mostrar_horario)

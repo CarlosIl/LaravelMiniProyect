@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col col-md-6"><b>Días</b></div>
             <div class="col col-md-6">
-                <a href="{{ route('turno.dia', $turno_choose->id) }}" class="btn btn-secondary btn-sm float-end"><span class="material-symbols-outlined">description</span></a>
+                <a href="{{ route('turno.dia', $turno_choose->id) }}" title="Añadir Día" class="btn btn-success btn-sm float-end rounded-circle"><span class="material-symbols-outlined">description</span></a>
             </div>
         </div>
     </div>

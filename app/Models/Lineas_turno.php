@@ -9,5 +9,5 @@ class Lineas_turno extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['id_turno', 'id_horario'];
+    protected $fillable = ['dia','id_turno', 'id_horario'];
 }

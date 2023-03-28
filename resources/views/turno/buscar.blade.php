@@ -31,6 +31,20 @@
                 </tr>
             @endif
         </table>
+        <form method="post" action="{{ route('turno.actualizar') }}" enctype="multipart/form-data">
+            @csrf
+			<div class="row mb-3">
+                <div class="col-sm-5">
+					<select name="">
+                        <option value="id">Código</option>
+                        <option value="descripcion">Descripción</option>
+                    </select>
+				</div>
+				<div class="col-sm-5">
+					<input type="text" name="" class="form-control"/>
+				</div>
+			</div>
+        </form>
     </div>
 </div>
 
