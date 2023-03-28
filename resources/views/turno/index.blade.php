@@ -49,9 +49,7 @@
 				</div>
 			</div>
 			<div class="text-center">
-				@if($mostrar_dias)
-				<input type="submit" class="btn btn-primary" value="Añadir" disabled/>
-				@else
+				@if(!$mostrar_dias)
 				<input type="submit" class="btn btn-primary" value="Añadir" />
 				@endif
 			</div>	

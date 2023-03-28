@@ -52,7 +52,7 @@ class StudentController extends Controller
         $request->validate([
             'student_name'          =>  'required',
             'student_email'         =>  'required|email|unique:students',
-            'student_file'         =>  'nullable|file'
+            'student_file'         =>  'nullable|file|max:41943039'
             // 'student_image'         =>  'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2048|dimensions:min_width=100,min_height=100,max_width=1000,max_height=1000'
         ]);
 

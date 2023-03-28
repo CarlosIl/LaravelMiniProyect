@@ -32,30 +32,28 @@ class FileController extends Controller
     public function store(Request $request, Student $student)
     {
         $request->validate([
-            'student_file'         =>  'nullable|file|max:41943040'
+            'student_file'         =>  'required|file|max:41943039'
         ]);
 
         $student = Student::find($request->hidden_id);
         $path = $student->student_ftp_path;
 
-        if ($request->hasFile('student_file')) {
-            // $file_name = request()->student_image->getClientOriginalName() . '_' . time() . '.' . request()->student_image->getClientOriginalExtension();
-            $file_name = time() . '_' . request()->student_file->getClientOriginalName();
+        // $file_name = request()->student_image->getClientOriginalName() . '_' . time() . '.' . request()->student_image->getClientOriginalExtension();
+        $file_name = time() . '_' . request()->student_file->getClientOriginalName();
 
-            try {
-                Storage::disk("ftp")->makeDirectory($path);
-                Storage::disk("ftp")->put($file_name, fopen($request->file('student_file'), 'r+'));
-            } catch (\Throwable $th) {
-                Storage::disk("sftp")->put("$path/$file_name", fopen($request->file('student_file'), 'r+'));
-            }
-
-            $file = new StudentFiles;
-
-            $file->file_name = $file_name;
-            $file->id_student = $student->id;
-    
-            $file->save();
+        try {
+            Storage::disk("ftp")->makeDirectory($path);
+            Storage::disk("ftp")->put($file_name, fopen($request->file('student_file'), 'r+'));
+        } catch (\Throwable $th) {
+            Storage::disk("sftp")->put("$path/$file_name", fopen($request->file('student_file'), 'r+'));
         }
+
+        $file = new StudentFiles;
+
+        $file->file_name = $file_name;
+        $file->id_student = $student->id;
+
+        $file->save();
 
         return redirect()->route('students.index')->with('success', 'El fichero ha sido añadido correctamente');
     }
@@ -65,13 +63,13 @@ class FileController extends Controller
      */
     public function show(Student $student)
     {
-        $ficherosStd = DB::select('SELECT id,file_name FROM `student_files` WHERE id_student = ?',[$student->id]);
+        $ficherosStd = DB::select('SELECT id,file_name FROM `student_files` WHERE id_student = ?', [$student->id]);
         $ficheros = json_decode(json_encode($ficherosStd), true);
 
-        return view('student/file/download', compact('ficheros','student'));
+        return view('student/file/download', compact('ficheros', 'student'));
     }
 
-    public function download(Request $request,Student $student)
+    public function download(Request $request, Student $student)
     {
         $id = $request->fichero;
 
@@ -87,8 +85,6 @@ class FileController extends Controller
         } catch (\Throwable $th) {
             return Storage::disk('sftp')->download("$path/$file_name");
         }
-
-
     }
 
     /**
@@ -110,16 +106,16 @@ class FileController extends Controller
     public function delete(Student $student)
     {
         //$ficheros = Storage::disk('ftp')->files($student->student_ftp_path);
-        $ficherosStd = DB::select('SELECT id,file_name FROM `student_files` WHERE id_student = ?',[$student->id]);
+        $ficherosStd = DB::select('SELECT id,file_name FROM `student_files` WHERE id_student = ?', [$student->id]);
         $ficheros = json_decode(json_encode($ficherosStd), true);
 
-        return view('student/file/delete', compact('ficheros','student'));
+        return view('student/file/delete', compact('ficheros', 'student'));
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request,Student $student)
+    public function destroy(Request $request, Student $student)
     {
         $id = $request->fichero;
 

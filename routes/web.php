@@ -92,4 +92,6 @@ Route::post('/turnos/crear', [TurnoController::class, 'crearTurno'])->name('turn
 Route::get('/turnos/buscar', [TurnoController::class, 'buscarTurno'])->name('turno.buscar');
 Route::get('/turnos/{turno_choose}/select', [TurnoController::class, 'seleccionarTurno'])->name('turno.seleccionar');
 Route::get('/turnos/{turno_choose}/dia', [TurnoController::class, 'crearDia'])->name('turno.dia');
-Route::get('/turnos/horario', [TurnoController::class, 'buscarHorario'])->name('turno.horario');
+Route::get('/turnos/{turno_choose}/horario', [TurnoController::class, 'buscarHorario'])->name('turno.horario');
+Route::get('/turnos/{turno_choose}/horario/{horario_choose}/select', [TurnoController::class, 'seleccionarHorario'])->name('turno.horario.seleccionar');
+Route::post('/turnos/{turno_choose}/dia/crear', [TurnoController::class, 'guardarDia'])->name('turno.dia.crear');

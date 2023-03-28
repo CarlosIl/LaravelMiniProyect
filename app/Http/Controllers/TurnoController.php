@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Horario;
+use App\Models\Lineas_turno;
 use Illuminate\Http\Request;
 use App\Models\Student;
 use App\Models\Turno;
@@ -33,6 +34,7 @@ class TurnoController extends Controller
         $turno_choose->descripcion = $request->descripcion;
         $turno_choose->save();
 
+        $dias = [];
         $mostrar_dias = true;
         return view('turno.index', compact('mostrar_dias','turno_choose','dias'));
     }
@@ -60,13 +62,47 @@ class TurnoController extends Controller
     {
         $diaStd = DB::select('SELECT MAX(dia) as diaMax FROM lineas_turnos WHERE id_turno = ?',[$turno_choose->id]);
         $diaNuevo = intval($diaStd[0]->diaMax)+1;
+        $mostrar_horario = false;
 
-        return view('turno/dia/index', compact('turno_choose', 'diaNuevo'));
+        return view('turno/dia/index', compact('turno_choose', 'diaNuevo','mostrar_horario'));
     }
 
-    public function buscarHorario()
+    public function buscarHorario(Turno $turno_choose)
     {
         $horarios = Horario::all();
-        return view('turno.horario.buscar', compact('horarios'));
+        return view('turno.horario.buscar', compact('turno_choose','horarios'));
+    }
+
+    public function seleccionarHorario(Turno $turno_choose, Horario $horario_choose)
+    {
+        $diaStd = DB::select('SELECT MAX(dia) as diaMax FROM lineas_turnos WHERE id_turno = ?',[$turno_choose->id]);
+        $diaNuevo = intval($diaStd[0]->diaMax)+1;
+        $mostrar_horario = true;
+        // $horario_choose = Horario::find($horario_id);
+        // $horario_descripcion = $horario_choose -> descripcion;
+        return view('turno/dia/index', compact('turno_choose', 'horario_choose', 'diaNuevo','mostrar_horario'));
+    }
+
+    public function guardarDia(Request $request, Turno $turno_choose)
+    {
+        $request->validate([
+            'dia'         =>  'required',
+            'id_turno'         =>  'required',
+            'id_horario'         =>  'required'
+        ]);
+
+        $linea_turno = new Lineas_turno();
+
+        $linea_turno->dia = $request->dia;
+        $linea_turno->id_turno = $request->id_turno;
+        $linea_turno->id_horario = $request->id_horario;
+
+        $linea_turno->save();
+
+        $diasStd = DB::select('SELECT dia, horarios.id as id_horario, horarios.descripcion FROM lineas_turnos JOIN horarios ON lineas_turnos.id_horario = horarios.id WHERE id_turno = ?',[$turno_choose->id]);
+        $dias = json_decode(json_encode($diasStd), true);
+        $mostrar_dias = true;
+        
+        return view('turno.index', compact('dias','turno_choose','mostrar_dias'));
     }
 }

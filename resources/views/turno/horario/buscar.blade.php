@@ -21,7 +21,7 @@
                         <td>{{ $horario->id }}</td>
                         <td>{{ $horario->descripcion }}</td>
                         <td>
-                            <a href="{{ route('turno.seleccionar', $horario->id) }}" class="btn btn-primary btn-sm">Seleccionar</a>
+                            <a href="{{ route('turno.horario.seleccionar', [$turno_choose, $horario->id]) }}" class="btn btn-primary btn-sm">Seleccionar</a>
                         </td>
                     </tr>
                 @endforeach
