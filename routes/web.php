@@ -118,3 +118,9 @@ Route::get('/turnos/{turno_choose}/eliminar', [TurnoController::class, 'eliminar
 
 //Volver a index de turnos con ese turno y editado 
 Route::post('/turnos/busqueda', [TurnoController::class, 'busquedaDeTurno'])->name('turno.busqueda');
+
+//Volver a index de turnos con ese turno y con un día eliminado 
+Route::get('/turnos/{turno_choose}/dia/eliminar', [TurnoController::class, 'eliminarDia'])->name('turno.dia.eliminar');
+
+//Volver a index de turnos con ese turno y editado 
+Route::post('/turnos/{turno_choose}/horario/busqueda', [TurnoController::class, 'busquedaDeHorario'])->name('turno.horario.busqueda');

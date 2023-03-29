@@ -7,7 +7,7 @@
         <div class="row">
             <div class="col col-md-6"><b>Días</b></div>
             <div class="col col-md-6">
-                <a href="{{ route('turno.dia', $turno_choose->id) }}" title="Añadir Día" class="btn btn-success btn-sm float-end rounded-circle"><span class="material-symbols-outlined">description</span></a>
+                <a href="{{ route('turno.dia', $turno_choose->id) }}" title="Añadir Día" class="btn btn-success btn-sm float-end rounded-circle"><span class="material-symbols-outlined">add</span></a>
             </div>
         </div>
     </div>
@@ -17,6 +17,7 @@
                 <th>Día</th>
                 <th>Horario</th>
                 <th>Descripción</th>
+                <th>Action</th>
             </tr>
             @if (count($dias) > 0)
                 @foreach ($dias as $dia)
@@ -24,6 +25,9 @@
                         <td>{{ $dia['dia'] }}</td>
                         <td>{{ $dia['id_horario'] }}</td>
                         <td>{{ $dia['descripcion'] }}</td>
+                        <td>
+                            <a href="{{ route('turno.dia.eliminar', $dia['id']) }}" title="Eliminar Turno" class="btn btn-danger btn-sm rounded-circle"><span class="material-symbols-outlined">delete</span></a>
+                        </td>
                     </tr>
                 @endforeach
             @else

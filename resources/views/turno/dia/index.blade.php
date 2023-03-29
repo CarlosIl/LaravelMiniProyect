@@ -17,7 +17,7 @@
 @endif
 
 <div class="card">
-	<div class="card-header"><b>Día</b></div>
+	<div class="card-header">Día <b>{{$diaNuevo}}</b> del Turno <b>{{$turno_choose->id}} {{$turno_choose->descripcion}}</b> </div>
 	<div class="card-body">
 		<form method="post" action="{{ route('turno.dia.crear', $turno_choose) }}" enctype="multipart/form-data">
 			@csrf

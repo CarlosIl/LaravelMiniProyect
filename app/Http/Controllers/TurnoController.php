@@ -11,9 +11,6 @@ use Illuminate\Support\Facades\DB;
 
 class TurnoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $mostrar_dias = false;
@@ -46,7 +43,7 @@ class TurnoController extends Controller
 
     public function seleccionarTurno(Turno $turno_choose)
     {
-        $diasStd = DB::select('SELECT dia, horarios.id as id_horario, horarios.descripcion FROM lineas_turnos JOIN horarios ON lineas_turnos.id_horario = horarios.id WHERE id_turno = ?',[$turno_choose->id]);
+        $diasStd = DB::select('SELECT lineas_turnos.id, dia, horarios.id as id_horario, horarios.descripcion FROM lineas_turnos JOIN horarios ON lineas_turnos.id_horario = horarios.id WHERE id_turno = ?',[$turno_choose->id]);
         $dias = json_decode(json_encode($diasStd), true);
         $mostrar_dias = true;
 
@@ -99,7 +96,7 @@ class TurnoController extends Controller
 
         $linea_turno->save();
 
-        $diasStd = DB::select('SELECT dia, horarios.id as id_horario, horarios.descripcion FROM lineas_turnos JOIN horarios ON lineas_turnos.id_horario = horarios.id WHERE id_turno = ?',[$turno_choose->id]);
+        $diasStd = DB::select('SELECT lineas_turnos.id, dia, horarios.id as id_horario, horarios.descripcion FROM lineas_turnos JOIN horarios ON lineas_turnos.id_horario = horarios.id WHERE id_turno = ?',[$turno_choose->id]);
         $dias = json_decode(json_encode($diasStd), true);
         $mostrar_dias = true;
         
@@ -121,7 +118,7 @@ class TurnoController extends Controller
         $turno_choose->descripcion = $request->descripcion;
         $turno_choose->save();
 
-        $diasStd = DB::select('SELECT dia, horarios.id as id_horario, horarios.descripcion FROM lineas_turnos JOIN horarios ON lineas_turnos.id_horario = horarios.id WHERE id_turno = ?',[$turno_choose->id]);
+        $diasStd = DB::select('SELECT lineas_turnos.id, dia, horarios.id as id_horario, horarios.descripcion FROM lineas_turnos JOIN horarios ON lineas_turnos.id_horario = horarios.id WHERE id_turno = ?',[$turno_choose->id]);
         $dias = json_decode(json_encode($diasStd), true);
         $mostrar_dias = true;
         
@@ -148,26 +145,37 @@ class TurnoController extends Controller
 
     public function busquedaDeTurno(Request $request)
     {
-        // if($request->buscarPor == 'id'){
-        //     $request->validate([
-        //         'loBuscado'         =>  'required|number'
-        //     ]);
-        // }else{
-        //     $request->validate([
-        //         'loBuscado'         =>  'required|text'
-        //     ]);
-        // }
-        $turnos = [];
         if($request->buscarPor == 'id'){
             $buscarId = intval($request->loBuscado);
-
-            $turnos = Turno::find(4)->get();
-            return view('turno.buscar', compact('turnos'));
+            $turnos = Turno::where('id', $buscarId)->get();
         }else{
             $buscarDesc = $request->loBuscado;
             $turnos = Turno::where('descripcion', $buscarDesc)->get();
-            return view('turno.buscar', compact('turnos'));
         }
+        return view('turno.buscar', compact('turnos'));
+    }
 
+    public function eliminarDia($diaSelect)
+    {
+        //FUNCIONA IGUAL
+        // DB::statement('DELETE FROM lineas_turnos WHERE id = ?',[$diaSelect]);
+
+        $lineas_turno = Lineas_turno::find($diaSelect);
+        $lineas_turno->delete();
+        $mostrar_dias = false;
+        
+        return redirect()->route('turno.index', compact('mostrar_dias'))->with('success', 'El dia ha sido eliminado');
+    }
+
+    public function busquedaDeHorario(Request $request, Turno $turno_choose)
+    {
+        if($request->buscarPor == 'id'){
+            $buscarId = intval($request->loBuscado);
+            $horarios = Horario::where('id', $buscarId)->get();
+        }else{
+            $buscarDesc = $request->loBuscado;
+            $horarios = Horario::where('descripcion', $buscarDesc)->get();
+        }
+        return view('turno.horario.buscar', compact('turno_choose','horarios'));
     }
 }
