@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Http\Request;
+use App\Models\Categoria;
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\CategoriaController;
@@ -33,7 +36,39 @@ Route::get('/', [LoginController::class, 'show']);
 // Route::get('categoria', [CategoriaController::class,'index']) ->name('categoria');
 
 //CATEGORIAS
-Route::resource('categorias', CategoriaController::class);
+// Route::resource('categorias', CategoriaController::class);
+
+Route::get('categorias', function () {
+    $reponseJson = (new CategoriaController)->index();
+    $response = $reponseJson->getOriginalContent();
+    // $reponse = json_decode($reponseJson,true);
+    // return dd($reponseJson);
+    return view('categoria/todos_cat', compact('response'));
+})->name('categorias.index');
+
+Route::get('categorias/create', [CategoriaController::class, 'create'])->name('categorias.create');
+Route::post('categorias/store', function (Request $request) {
+    (new CategoriaController)->store($request);
+    return redirect()->route('categorias.index')->with('success', 'Se añadido la nueva categoría.');
+})->name('categorias.store');
+
+Route::get('categorias/edit/{categoria}', [CategoriaController::class, 'edit'])->name('categorias.edit');
+Route::put('categorias/update', function (Request $request) {
+    (new CategoriaController)->update($request);
+    return redirect()->route('categorias.index')->with('success', 'La categoría ha sido editada correctamente');
+})->name('categorias.update');
+
+Route::delete('categorias/destroy/{categoria}', function (Categoria $categoria) {
+    $reponseJson = (new CategoriaController)->destroy($categoria);
+    $response = $reponseJson->getOriginalContent();
+    if ($response['success']=="false") {
+        return redirect()->route('categorias.index')->with('success', $response['message']);
+    } else {
+        return redirect()->route('categorias.index')->with('error', $response['data']);
+    }
+})->name('categorias.destroy');
+
+
 
 //Para PDF
 Route::get('generate-pdf', [PDFController::class, 'generatePDF']);

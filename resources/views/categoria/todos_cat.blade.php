@@ -28,14 +28,15 @@
                     <th>Descripción</th>
                     <th>Acciones</th>
                 </tr>
-                @if (count($data) > 0)
-                    @foreach ($data as $row)
+                @if (count($response) > 0)
+                    @foreach ($response['data'] as $row)
                         <tr>
                             <td>{{ $row->id }}</td>
                             <td>{{ $row->descripcion }}</td>
                             
                             <td>
                                 <form method="post" action="{{ route('categorias.destroy', $row->id) }}">
+                                <form>
                                     @csrf
                                     @method('DELETE')
                                     <a href="{{ route('categorias.edit', $row->id) }}"

@@ -2,26 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\API\BaseController;
 use App\Models\Categoria;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
-class CategoriaController extends Controller
+class CategoriaController extends BaseController
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        if(!Auth::check()){
-            return redirect('/login');
-        }
+        // if(!Auth::check()){
+        //     return redirect('/login');
+        // }
 
         $data = Categoria::all();
 
-        return view('categoria/todos_cat', compact('data'));
+        return $this->sendResponse($data, 'Categorias retrieved successfully');
+        // return view('categoria/todos_cat', compact('data'));
     }
 
     /**
@@ -41,13 +43,18 @@ class CategoriaController extends Controller
             'descripcion'          =>  'required|unique:categorias',
         ]);
 
+        // if($request->fails()){
+        //     return $this->sendError('Validation Error.', $request->errors());
+        // }
+
         $categoria = new Categoria();
 
         $categoria->descripcion = $request->descripcion;
 
         $categoria->save();
 
-        return redirect()->route('categorias.index')->with('success', 'Se añadido la nueva categoría.');
+        return $this->sendResponse($categoria, 'Categoría creada');
+        // return redirect()->route('categorias.index')->with('success', 'Se añadido la nueva categoría.');
     }
 
     // /**
@@ -69,11 +76,15 @@ class CategoriaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Categoria $categoria)
+    public function update(Request $request)
     {
         $request->validate([
             'descripcion'          =>  'required|unique:categorias',
         ]);
+
+        // if($request->fails()){
+        //     return $this->sendError('Validation Error.', $request->errors());
+        // }
 
         $categoria = Categoria::find($request->hidden_id);
 
@@ -81,7 +92,8 @@ class CategoriaController extends Controller
 
         $categoria->save();
 
-        return redirect()->route('categorias.index')->with('success', 'La categoría ha sido editada correctamente');
+        return $this->sendResponse($categoria, 'Categoría actualizada');
+        // return redirect()->route('categorias.index')->with('success', 'La categoría ha sido editada correctamente');
     }
 
     // /**
@@ -95,10 +107,16 @@ class CategoriaController extends Controller
         if ($students_with_categoria == 0) {
             $categoria->delete();
 
-            return redirect()->route('categorias.index')->with('success', 'La categoría ha sido eliminada');
+            return $this->sendResponse([], 'Categoría eliminada');
+            // return redirect()->route('categorias.index')->with('success', 'La categoría ha sido eliminada');
         }else{
-
-            return redirect()->route('categorias.index')->with('error', "ERROR: La categoria esta siendo usada $students_with_categoria veces");
+            return $this->sendError('Error.', "La categoria esta siendo usada $students_with_categoria veces");
+            // return redirect()->route('categorias.index')->with('error', "ERROR: La categoria esta siendo usada $students_with_categoria veces");
         }
+    }
+
+    public function show()
+    {
+        # code...
     }
 }
