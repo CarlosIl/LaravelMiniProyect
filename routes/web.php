@@ -13,6 +13,7 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\LookoutController;
 use App\Http\Controllers\TurnoController;
+use Illuminate\Support\Facades\Http;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,35 +40,44 @@ Route::get('/', [LoginController::class, 'show']);
 // Route::resource('categorias', CategoriaController::class);
 
 Route::get('categorias', function () {
-    $reponseJson = (new CategoriaController)->index();
-    $response = $reponseJson->getOriginalContent();
-    // $reponse = json_decode($reponseJson,true);
-    // return dd($reponseJson);
+    $token = session()->get('tokenApi');
+    $response = Http::withHeaders(['Authorization' => 'Bearer '.$token])->acceptJson()->get('http://localhost/pruebas/pruebaCategoria/public/api/categorias')->json();
     return view('categoria/todos_cat', compact('response'));
 })->name('categorias.index');
 
 Route::get('categorias/create', [CategoriaController::class, 'create'])->name('categorias.create');
 Route::post('categorias/store', function (Request $request) {
-    (new CategoriaController)->store($request);
-    return redirect()->route('categorias.index')->with('success', 'Se añadido la nueva categoría.');
+    $token = session()->get('tokenApi');
+    $response = Http::withHeaders(['Authorization' => 'Bearer '.$token])->acceptJson()->post('http://localhost/pruebas/pruebaCategoria/public/api/categorias', $request)->json();
+    if ($response['success']=="false") {
+        return redirect()->route('categorias.index')->with('success', $response['message']);
+    } else {
+        return redirect()->route('categorias.index')->with('error', implode($response['data']['descripcion']));
+    }
 })->name('categorias.store');
 
 Route::get('categorias/edit/{categoria}', [CategoriaController::class, 'edit'])->name('categorias.edit');
 Route::put('categorias/update', function (Request $request) {
-    (new CategoriaController)->update($request);
-    return redirect()->route('categorias.index')->with('success', 'La categoría ha sido editada correctamente');
+    $token = session()->get('tokenApi');
+    $response = Http::withHeaders(['Authorization' => 'Bearer '.$token])->acceptJson()->put("http://localhost/pruebas/pruebaCategoria/public/api/categorias/$request->hidden_id", $request)->json();
+    
+    if ($response['success']=="false") {
+        return redirect()->route('categorias.index')->with('success', $response['message']);
+    } else {
+        return redirect()->route('categorias.index')->with('error', implode($response['data']['descripcion']));
+    }
 })->name('categorias.update');
 
 Route::delete('categorias/destroy/{categoria}', function (Categoria $categoria) {
-    $reponseJson = (new CategoriaController)->destroy($categoria);
-    $response = $reponseJson->getOriginalContent();
+    $token = session()->get('tokenApi');
+    $response = Http::withHeaders(['Authorization' => 'Bearer '.$token])->acceptJson()->delete("http://localhost/pruebas/pruebaCategoria/public/api/categorias/$categoria->id")->json();
+
     if ($response['success']=="false") {
         return redirect()->route('categorias.index')->with('success', $response['message']);
     } else {
         return redirect()->route('categorias.index')->with('error', $response['data']);
     }
 })->name('categorias.destroy');
-
 
 
 //Para PDF
@@ -98,6 +108,7 @@ Route::middleware(['auth','user-access:admin'])->group(function(){
     Route::resource('students', StudentController::class);
 });
 
+//Desde aquí modificar con put y
 //FICHEROS
 
 //Ir al index de los ficheros

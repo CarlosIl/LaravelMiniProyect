@@ -82,9 +82,9 @@ class CategoriaController extends BaseController
             'descripcion'          =>  'required|unique:categorias',
         ]);
 
-        // if($request->fails()){
-        //     return $this->sendError('Validation Error.', $request->errors());
-        // }
+        if($request->fails()){
+            return $this->sendError('Validation Error.', $request->errors());
+        }
 
         $categoria = Categoria::find($request->hidden_id);
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class LoginController extends Controller
 {
@@ -31,9 +32,12 @@ class LoginController extends Controller
         $user = Auth::getProvider()->retrieveByCredentials($credentials);
 
         Auth::login($user);
-
+        
+        $success = Http::post('http://localhost/pruebas/pruebaCategoria/public/api/token', $request);
+        session()->put('tokenApi', $success['token'] ); 
+        // return $success;
         if(auth()->user()->type == 'admin'){
-            return redirect()->route('students.index');
+            return redirect()->route('categorias.index');
         }elseif(auth()->user()->type == 'user'){
             return redirect()->to('/verstu');
         }else{
