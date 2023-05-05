@@ -21,6 +21,7 @@
 	<div class="card-body">
 		<form method="post" action="{{ route('turno.actualizar') }}" enctype="multipart/form-data">
 			@csrf
+			@method('PUT')
 			<div class="row mb-3">
 				<label class="col-sm-2 col-label-form">Código</label>
 				<div class="col-sm-10">

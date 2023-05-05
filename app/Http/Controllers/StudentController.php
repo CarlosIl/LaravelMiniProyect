@@ -22,11 +22,12 @@ class StudentController extends Controller
         // if(!Auth::check()){
         //     return redirect('/login');
         // }
-        
+
         $students = Student::latest()->paginate(10);
         $categorias = Categoria::all();
+        // return dd($students);
 
-        return view('student/index', compact('students','categorias'))->with('i', (request()->input('page', 1) - 1) * 5);
+        return view('student/index', compact('students', 'categorias'))->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
     /**
@@ -37,7 +38,7 @@ class StudentController extends Controller
     public function create()
     {
         $categorias = Categoria::all();
-        
+
         return view('student/create', compact('categorias'));
     }
 
@@ -52,48 +53,49 @@ class StudentController extends Controller
         $request->validate([
             'student_name'          =>  'required',
             'student_email'         =>  'required|email|unique:students',
-            'student_file'         =>  'nullable|file|max:41943039'
-            // 'student_image'         =>  'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2048|dimensions:min_width=100,min_height=100,max_width=1000,max_height=1000'
+            // 'student_file'         =>  'nullable|file|max:41943039'
+            'student_file'         =>  'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2048|dimensions:min_width=100,min_height=100,max_width=1000,max_height=1000'
         ]);
-
         // request()->student_image->move(public_path('images'), $file_name);
 
-        $path = request()->student_email;
+        DB::transaction(function () use ($request) {
+            $path = request()->student_email;
 
-        $student = new Student;
+            $student = new Student;
 
-        $student->student_name = $request->student_name;
-        $student->student_email = $request->student_email;
-        $student->student_gender = $request->student_gender;
-        $student->id_categoria = $request->id_categoria;
-        // $student->student_image = $file_name;
-        $student->student_ftp_path = $path;
+            $student->student_name = $request->student_name;
+            $student->student_email = $request->student_email;
+            $student->student_gender = $request->student_gender;
+            $student->id_categoria = $request->id_categoria;
+            // $student->student_image = $file_name;
+            $student->student_ftp_path = $path;
 
-        $student->save();
+            $student->save();
 
-        try {
-            Storage::disk('ftp')->makeDirectory($path);
-        } catch (\Throwable $th) {
-            Storage::disk('sftp')->makeDirectory($path);
-        }
-
-        if ($request->hasFile('student_file')) {
-            $file_name = time() . '_' . request()->student_file->getClientOriginalName();
             try {
                 Storage::disk('ftp')->makeDirectory($path);
-                Storage::disk('ftp')->put("$file_name", fopen($request->file('student_file'), 'r+'));
             } catch (\Throwable $th) {
-                Storage::disk('sftp')->put("$path/$file_name", fopen($request->file('student_file'), 'r+'));
+                Storage::disk('sftp')->makeDirectory($path);
             }
 
-            $file = new StudentFiles;
+            if ($request->hasFile('student_file')) {
+                $file_name = time() . '_' . request()->student_file->getClientOriginalName();
+                try {
+                    Storage::disk('ftp')->makeDirectory($path);
+                    Storage::disk('ftp')->put("$file_name", fopen($request->file('student_file'), 'r+'));
+                } catch (\Throwable $th) {
+                    Storage::disk('sftp')->put("$path/$file_name", fopen($request->file('student_file'), 'r+'));
+                }
 
-            $file->file_name = $file_name;
-            $file->id_student = $student->id;
-    
-            $file->save();
-        }
+                $file = new StudentFiles;
 
+                $file->file_name = $file_name;
+                $file->id_student = $student->id;
+
+                $file->save();
+            }
+
+        });
         return redirect()->route('students.index')->with('success', 'Student Added successfully.');
     }
 
@@ -115,11 +117,11 @@ class StudentController extends Controller
         //     $ficheros_final[] = $file;
         // };
 
-        $ficherosStd = DB::select('SELECT id,file_name FROM `student_files` WHERE id_student = ?',[$student->id]);
+        $ficherosStd = DB::select('SELECT id,file_name FROM `student_files` WHERE id_student = ?', [$student->id]);
         $ficheros = json_decode(json_encode($ficherosStd), true);
 
         $categorias = Categoria::all();
-        return view('student/show', compact('student','categorias','ficheros'));
+        return view('student/show', compact('student', 'categorias', 'ficheros'));
     }
 
     /**
@@ -131,7 +133,7 @@ class StudentController extends Controller
     public function edit(Student $student)
     {
         $categorias = Categoria::all();
-        return view('student/edit', compact('student','categorias'));
+        return view('student/edit', compact('student', 'categorias'));
     }
 
     /**
@@ -198,9 +200,9 @@ class StudentController extends Controller
         // Para eliminar imagen o fichero en Laravel Storage
         // $new_student_image = "images/{$student->student_image}";
         // unlink($new_student_image);
-        $sql = DB::select('SELECT count(*) as total FROM student_files WHERE id_student = ?',[$student->id]);
+        $sql = DB::select('SELECT count(*) as total FROM student_files WHERE id_student = ?', [$student->id]);
         $ficheros_con_students = intval($sql[0]->total);
-        
+
         if ($ficheros_con_students == 0) {
             $path = $student->student_ftp_path;
 
@@ -211,14 +213,12 @@ class StudentController extends Controller
             }
 
             $student->delete();
-    
+
             return redirect()->route('students.index')->with('success', 'Student Data deleted successfully');
-        }else{
+        } else {
 
             return redirect()->route('students.index')->with('error', "ERROR: Este usuario tiene $ficheros_con_students documentos en su directorio");
         }
-
-
     }
 
     public function indexUser()
@@ -230,7 +230,6 @@ class StudentController extends Controller
         $students = Student::get();
         $categorias = Categoria::get();
 
-        return view('student/index', compact('students','categorias'));
+        return view('student/index', compact('students', 'categorias'));
     }
-
 }

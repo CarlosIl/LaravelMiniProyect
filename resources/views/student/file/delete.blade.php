@@ -16,6 +16,7 @@
             @else
                 <form method="post" action="{{ route('files.destroy') }}" enctype="multipart/form-data">
                     @csrf
+                    @method('DELETE')
                     <div class="row mb-4">
                         <label class="col-sm-2 col-label-form">Elige el fichero</label>
                         <div class="col-sm-10">

@@ -11,7 +11,6 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\LogoutController;
-use App\Http\Controllers\LookoutController;
 use App\Http\Controllers\TurnoController;
 use Illuminate\Support\Facades\Http;
 
@@ -41,14 +40,16 @@ Route::get('/', [LoginController::class, 'show']);
 
 Route::get('categorias', function () {
     $token = session()->get('tokenApi');
-    $response = Http::withHeaders(['Authorization' => 'Bearer '.$token])->acceptJson()->get('http://localhost/pruebas/pruebaCategoria/public/api/categorias')->json();
+    // $response = Http::withHeaders(['Authorization' => 'Bearer '.$token])->acceptJson()->get('http://localhost/pruebas/pruebaCategoria/public/api/categorias')->json();
+    $response = Http::withToken($token)->acceptJson()->get('http://localhost/pruebas/pruebaCategoria/public/api/categorias')->json();
+    // return $response;
     return view('categoria/todos_cat', compact('response'));
 })->name('categorias.index');
 
 Route::get('categorias/create', [CategoriaController::class, 'create'])->name('categorias.create');
 Route::post('categorias/store', function (Request $request) {
     $token = session()->get('tokenApi');
-    $response = Http::withHeaders(['Authorization' => 'Bearer '.$token])->acceptJson()->post('http://localhost/pruebas/pruebaCategoria/public/api/categorias', $request)->json();
+    $response = Http::withToken($token)->acceptJson()->post('http://localhost/pruebas/pruebaCategoria/public/api/categorias', $request)->json();
     if ($response['success']=="false") {
         return redirect()->route('categorias.index')->with('success', $response['message']);
     } else {
@@ -59,7 +60,7 @@ Route::post('categorias/store', function (Request $request) {
 Route::get('categorias/edit/{categoria}', [CategoriaController::class, 'edit'])->name('categorias.edit');
 Route::put('categorias/update', function (Request $request) {
     $token = session()->get('tokenApi');
-    $response = Http::withHeaders(['Authorization' => 'Bearer '.$token])->acceptJson()->put("http://localhost/pruebas/pruebaCategoria/public/api/categorias/$request->hidden_id", $request)->json();
+    $response = Http::withToken($token)->acceptJson()->put("http://localhost/pruebas/pruebaCategoria/public/api/categorias/$request->hidden_id", $request)->json();
     
     if ($response['success']=="false") {
         return redirect()->route('categorias.index')->with('success', $response['message']);
@@ -70,7 +71,7 @@ Route::put('categorias/update', function (Request $request) {
 
 Route::delete('categorias/destroy/{categoria}', function (Categoria $categoria) {
     $token = session()->get('tokenApi');
-    $response = Http::withHeaders(['Authorization' => 'Bearer '.$token])->acceptJson()->delete("http://localhost/pruebas/pruebaCategoria/public/api/categorias/$categoria->id")->json();
+    $response = Http::withToken($token)->acceptJson()->delete("http://localhost/pruebas/pruebaCategoria/public/api/categorias/$categoria->id")->json();
 
     if ($response['success']=="false") {
         return redirect()->route('categorias.index')->with('success', $response['message']);
@@ -91,8 +92,6 @@ Route::post('/register', [RegisterController::class, 'register']);
 Route::get('/login', [LoginController::class, 'show']);
 //Poner name para arreglar error de redirección login
 Route::post('/login', [LoginController::class, 'login'])->name('login');
-
-// Route::get('/home', [HomeController::class, 'index']);
 
 //Desloguearse
 Route::get('/logout', [LogoutController::class, 'logout']);
@@ -124,7 +123,7 @@ Route::post('/files/store', [FileController::class, 'store'])->name('files.store
 
 //Mostrar y eliminar ficheros
 Route::get('/files/delete/{student}', [FileController::class, 'delete'])->name('files.delete');
-Route::post('/files/destroy', [FileController::class, 'destroy'])->name('files.destroy');
+Route::delete('/files', [FileController::class, 'destroy'])->name('files.destroy');
 
 
 //TURNOS
