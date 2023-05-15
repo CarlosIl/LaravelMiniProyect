@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use App\Models\Student;
 use App\Models\StudentFiles;
+use ZipArchive;
 
 class FileController extends Controller
 {
@@ -40,6 +41,14 @@ class FileController extends Controller
 
         // $file_name = request()->student_image->getClientOriginalName() . '_' . time() . '.' . request()->student_image->getClientOriginalExtension();
         $file_name = time() . '_' . request()->student_file->getClientOriginalName();
+
+        //Para crear un .zip con un fichero, también crea el fichero dentro de la carpeta public. Añadir extensión zip a php
+        // $zip = new ZipArchive;
+        // $zip->open("$file_name.zip", ZipArchive::CREATE);
+        // $zip->addFile($request->file('student_file'), $file_name);
+        // $zip->close();
+
+        // return response()->download("$file_name.zip");
 
         try {
             Storage::disk("ftp")->makeDirectory($path);

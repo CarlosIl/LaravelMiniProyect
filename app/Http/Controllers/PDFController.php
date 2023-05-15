@@ -23,4 +23,22 @@ class PDFController extends Controller
 
         return $pdf->download('students.pdf');
     }
+
+    public function generateDiploma(String $nombre)
+    {
+        // $request->validate([
+        //     'nombre'          =>  'required',
+        // ]);
+
+        $data = [
+            'nombre' => $nombre,
+            'fecha' => now()->format('d-m-Y H:m:s')
+        ];
+        // return $data;
+
+        $pdf =  PDF::loadView('diploma', $data)->setPaper('a4', 'landscape');
+        return $pdf->download('diploma.pdf');
+
+        // return view('diploma', compact('data'));
+    }
 }

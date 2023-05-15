@@ -83,6 +83,7 @@ Route::delete('categorias/destroy/{categoria}', function (Categoria $categoria) 
 
 //Para PDF
 Route::get('generate-pdf', [PDFController::class, 'generatePDF']);
+Route::get('diploma/{nombre}', [PDFController::class, 'generateDiploma']);
 
 //Para página registro
 Route::get('/register', [RegisterController::class, 'show']);
